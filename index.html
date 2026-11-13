@@ -921,7 +921,7 @@
 
                         <div>
                             <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">${t('terms')}</label>
-                            <textarea id="newTerms" rows="2" required placeholder="Escrow release conditions and terms..." class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite focus:border-acidlime outline-none text-sm">100% Escrow hold until verified delivery and inspection.</textarea>
+                            <textarea id="newTerms" rows="2" required placeholder="Release conditions and terms..." class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite focus:border-acidlime outline-none text-sm">100% Protected hold until verified delivery and inspection.</textarea>
                         </div>
 
                         <button type="submit" class="w-full py-4 px-4 bg-acidlime text-obsidian font-bold rounded-xl hover:bg-lime-400 transition-colors shadow-lg shadow-acidlime/20 text-sm">
@@ -1068,11 +1068,11 @@
                             <div class="text-2xl sm:text-3xl font-extrabold">${formatPKR(availableEarnings)}</div>
                         </div>
                         <div class="p-5 sm:p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
-                            <div class="text-xs uppercase font-semibold text-softgray mb-2">Escrow on Hold</div>
+                            <div class="text-xs uppercase font-semibold text-softgray mb-2">Amount on Hold</div>
                             <div class="text-2xl sm:text-3xl font-extrabold text-hotorange">${formatPKR(earningsOnHold)}</div>
                         </div>
                         <div class="p-5 sm:p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
-                            <div class="text-xs uppercase font-semibold text-softgray mb-2">Disputed Escrow</div>
+                            <div class="text-xs uppercase font-semibold text-softgray mb-2">Disputed Amount</div>
                             <div class="text-2xl sm:text-3xl font-extrabold text-red-400">${formatPKR(disputedAmount)}</div>
                         </div>
                     </div>
@@ -1098,7 +1098,7 @@
                                             <td class="py-4 pr-4 font-bold">${formatPKR(tx.amount)}</td>
                                             <td class="py-4 pr-4">
                                                 <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${tx.status === 'Completed' ? 'bg-acidlime/10 text-acidlime' : 'bg-hotorange/10 text-hotorange'}">
-                                                    ${tx.status === 'Completed' ? 'Released to Available' : 'Escrow Secured'}
+                                                    ${tx.status === 'Completed' ? 'Released to Available' : 'On Hold'}
                                                 </span>
                                             </td>
                                             <td class="py-4 text-right text-softgray text-xs">${tx.createdAt}</td>
@@ -1196,7 +1196,7 @@
             return `
                 <div class="space-y-6 max-w-4xl mx-auto w-full">
                     <div class="bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-5 sm:p-6 shadow-lg">
-                        <h2 class="text-lg sm:text-xl font-bold tracking-tight mb-2">Admin Dispute Resolution</h2>
+                        <h2 class="text-lg sm:text-xl font-bold tracking-tight mb-2">Deal Resolution Panel</h2>
                         <p class="text-xs text-softgray mb-6">Resolve active deal disputes for testing.</p>
 
                         <div class="space-y-4">
@@ -1237,67 +1237,12 @@
             tx.dispute = null;
             tx.timeline.push({
                 time: new Date().toISOString().replace('T', ' ').substring(0, 16),
-                event: `Admin resolved dispute in favour of ${favour.toUpperCase()}. Status updated to ${tx.status}.`
+                event: `Resolved dispute in favour of ${favour.toUpperCase()}. Status updated to ${tx.status}.`
             });
             addNotification(`Dispute for ${txId} resolved in favour of ${favour}.`);
             saveState();
             render();
             showToast(`Transaction ${txId} resolved successfully!`);
-        }
-
-        // --- DEMO ADMIN RESOLUTION PANEL ---
-        function renderAdminTab() {
-            const disputes = state.transactions.filter(tx => tx.dispute);
-            return `
-                <div class="space-y-6 max-w-4xl mx-auto w-full">
-                    <div class="bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-5 sm:p-6 shadow-lg">
-                        <h2 class="text-lg sm:text-xl font-bold tracking-tight mb-2">Demo Admin & Dispute Resolution Panel</h2>
-                        <p class="text-xs text-softgray mb-6">Simulate incubator / platform arbiter resolution for active escrow disputes.</p>
-
-                        <div class="space-y-4">
-                            ${disputes.map(tx => `
-                                <div class="p-4 sm:p-5 rounded-xl bg-obsidian border border-borderdark space-y-4">
-                                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                                        <div class="flex items-center space-x-3">
-                                            <span class="font-mono text-xs text-acidlime">${tx.id}</span>
-                                            <span class="font-bold text-sm sm:text-base">${tx.title}</span>
-                                        </div>
-                                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-red-500/10 text-red-400">${formatPKR(tx.amount)}</span>
-                                    </div>
-                                    <div class="text-xs text-softgray">
-                                        Reason: <strong class="text-offwhite">${tx.dispute.reason}</strong> — ${tx.dispute.description}
-                                    </div>
-                                    <div class="flex flex-col sm:flex-row gap-3 pt-2 border-t border-borderdark">
-                                        <button onclick="resolveDispute('${tx.id}', 'buyer')" class="px-4 py-2.5 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-semibold hover:bg-blue-500/20 text-center">
-                                            Resolve in Buyer's Favour (Refund)
-                                        </button>
-                                        <button onclick="resolveDispute('${tx.id}', 'seller')" class="px-4 py-2.5 rounded-xl bg-acidlime/10 text-acidlime border border-acidlime/20 text-xs font-semibold hover:bg-acidlime/20 text-center">
-                                            Resolve in Seller's Favour (Release Funds)
-                                        </button>
-                                    </div>
-                                </div>
-                            `).join('')}
-                            ${disputes.length === 0 ? `<div class="text-center py-12 text-softgray">No disputed transactions pending admin mediation.</div>` : ''}
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function resolveDispute(txId, favour) {
-            const tx = state.transactions.find(t => t.id === txId);
-            if (!tx) return;
-            tx.status = favour === 'buyer' ? 'Rejected' : 'Completed';
-            tx.shippingStage = favour === 'buyer' ? 'Preparing Order' : 'Delivered';
-            tx.dispute = null;
-            tx.timeline.push({
-                time: new Date().toISOString().replace('T', ' ').substring(0, 16),
-                event: `Admin resolved dispute in favour of ${favour.toUpperCase()}. Status updated to ${tx.status}.`
-            });
-            addNotification(`Dispute for ${txId} resolved by admin in favour of ${favour}.`);
-            saveState();
-            render();
-            showToast(`Transaction ${txId} successfully resolved!`);
         }
 
         // ==========================================
@@ -1538,27 +1483,6 @@
             showToast("Payment successfully processed and placed on hold!");
         }
 
-        function processPayment(txId) {
-            const tx = state.transactions.find(t => t.id === txId);
-            if (!tx) return;
-            const method = document.querySelector('input[name="payMethod"]:checked').value;
-            const payRef = "PAY-PK-" + Math.floor(100000 + Math.random() * 900000);
-
-            tx.status = 'Payment Received';
-            tx.paymentMethod = method;
-            tx.paymentRef = payRef;
-            tx.timeline.push({
-                time: new Date().toISOString().replace('T', ' ').substring(0, 16),
-                event: `Simulated payment of ${formatPKR(tx.amount)} via ${method} received (Ref: ${payRef}) and secured in escrow vault.`
-            });
-
-            addNotification(`Payment received for deal ${txId}. Funds secured in escrow.`);
-            saveState();
-            closeModal();
-            render();
-            showToast("Payment successfully processed and secured in escrow!");
-        }
-
         function updateDeliveryStage(txId) {
             const tx = state.transactions.find(t => t.id === txId);
             if (!tx) return;
@@ -1586,7 +1510,7 @@
             tx.shippingStage = 'Delivered';
             tx.timeline.push({
                 time: new Date().toISOString().replace('T', ' ').substring(0, 16),
-                event: `Delivery confirmed by buyer. Escrow funds released to seller available balance.`
+                event: `Delivery confirmed by buyer. Funds released to seller available balance.`
             });
 
             addNotification(`Delivery confirmed for ${txId}. Funds released to seller.`);
@@ -1661,3 +1585,6 @@
             render();
             showToast("Issue reported. Funds frozen for review.", "error");
         }
+    </script>
+</body>
+</html>
