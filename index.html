@@ -53,8 +53,8 @@
         // ==========================================
         // 1. BRAND ASSETS & CONSTANTS
         // ==========================================
-        const LOGO_LIGHT = "https://i.imgur.com/W2C6b8F.png"; // Provided light logo for dark backgrounds
-        const LOGO_DARK = "https://i.imgur.com/83Z937Q.png";  // Provided dark logo for light backgrounds
+        const LOGO_LIGHT = "logolight.png"; // Local file for dark backgrounds
+        const LOGO_DARK = "logodark.png";   // Local file for light backgrounds
 
         const TAGLINE_EN = "Don't Just Pay. Bind the Deal.";
         const TAGLINE_UR = "صرف ادائیگی نہ کریں، ڈیل پکی کریں۔";
@@ -544,16 +544,17 @@
         function renderDashboardContainer() {
             const role = state.currentUser.role;
             return `
-                <div class="flex-1 flex flex-col md:flex-row bg-obsidian text-offwhite dark:bg-obsidian dark:text-offwhite bg-[#F5F2EA] text-[#0B0B0D]">
-                    <aside class="w-full md:w-64 bg-carddark dark:bg-carddark bg-white border-r border-borderdark dark:border-borderdark border-borderlight flex flex-col justify-between p-6">
+                <div class="flex-1 flex flex-col lg:flex-row bg-obsidian text-offwhite dark:bg-obsidian dark:text-offwhite bg-[#F5F2EA] text-[#0B0B0D] min-h-screen">
+                    <!-- Responsive Sidebar / Top Header for Mobile -->
+                    <aside class="w-full lg:w-72 bg-carddark dark:bg-carddark bg-white border-b lg:border-b-0 lg:border-r border-borderdark dark:border-borderdark border-borderlight flex flex-col justify-between p-4 lg:p-6 flex-shrink-0">
                         <div>
-                            <div class="flex items-center justify-between mb-8">
-                                <img src="${state.theme === 'dark' ? LOGO_LIGHT : LOGO_DARK}" alt="BindPay" class="h-8 object-contain">
-                                <div class="flex items-center space-x-1">
-                                    <button onclick="toggleLang()" class="p-1.5 rounded-lg bg-zinc-800 text-offwhite text-xs font-bold" title="Switch Language">
+                            <div class="flex items-center justify-between mb-6 lg:mb-8">
+                                <img src="${state.theme === 'dark' ? LOGO_LIGHT : LOGO_DARK}" alt="BindPay" class="h-7 lg:h-8 object-contain">
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="toggleLang()" class="px-2 py-1 rounded-lg bg-zinc-800 text-offwhite text-xs font-bold" title="Switch Language">
                                         ${state.lang.toUpperCase()}
                                     </button>
-                                    <button onclick="toggleTheme()" class="p-1.5 rounded-lg bg-zinc-800 text-acidlime">
+                                    <button onclick="toggleTheme()" class="p-2 rounded-lg bg-zinc-800 text-acidlime">
                                         <i data-lucide="${state.theme === 'dark' ? 'sun' : 'moon'}" class="w-4 h-4"></i>
                                     </button>
                                 </div>
@@ -569,49 +570,49 @@
                                 </div>
                             </div>
 
-                            <nav class="space-y-1.5">
-                                <button onclick="state.activeTab='overview'; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='overview' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
-                                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-                                    <span>${t('overview')}</span>
+                            <nav class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2 lg:space-y-1.5 lg:grid-cols-none">
+                                <button onclick="state.activeTab='overview'; render();" class="w-full flex items-center space-x-3 px-3.5 lg:px-4 py-2.5 lg:py-3 rounded-xl text-xs lg:text-sm font-medium transition-colors ${state.activeTab==='overview' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                    <i data-lucide="layout-dashboard" class="w-4 h-4 flex-shrink-0"></i>
+                                    <span class="truncate">${t('overview')}</span>
                                 </button>
 
                                 ${role === 'buyer' ? `
-                                    <button onclick="state.activeTab='create'; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='create' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
-                                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                                        <span>${t('createDeal')}</span>
+                                    <button onclick="state.activeTab='create'; render();" class="w-full flex items-center space-x-3 px-3.5 lg:px-4 py-2.5 lg:py-3 rounded-xl text-xs lg:text-sm font-medium transition-colors ${state.activeTab==='create' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                        <i data-lucide="plus-circle" class="w-4 h-4 flex-shrink-0"></i>
+                                        <span class="truncate">${t('createDeal')}</span>
                                     </button>
                                 ` : ''}
 
-                                <button onclick="state.activeTab='deals'; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='deals' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
-                                    <i data-lucide="briefcase" class="w-4 h-4"></i>
-                                    <span>${t('myDeals')}</span>
+                                <button onclick="state.activeTab='deals'; render();" class="w-full flex items-center space-x-3 px-3.5 lg:px-4 py-2.5 lg:py-3 rounded-xl text-xs lg:text-sm font-medium transition-colors ${state.activeTab==='deals' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                    <i data-lucide="briefcase" class="w-4 h-4 flex-shrink-0"></i>
+                                    <span class="truncate">${t('myDeals')}</span>
                                 </button>
 
                                 ${role === 'seller' ? `
-                                    <button onclick="state.activeTab='earnings'; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='earnings' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
-                                        <i data-lucide="wallet" class="w-4 h-4"></i>
-                                        <span>${t('earnings')}</span>
+                                    <button onclick="state.activeTab='earnings'; render();" class="w-full flex items-center space-x-3 px-3.5 lg:px-4 py-2.5 lg:py-3 rounded-xl text-xs lg:text-sm font-medium transition-colors ${state.activeTab==='earnings' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                        <i data-lucide="wallet" class="w-4 h-4 flex-shrink-0"></i>
+                                        <span class="truncate">${t('earnings')}</span>
                                     </button>
                                 ` : ''}
 
-                                <button onclick="state.activeTab='disputes'; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='disputes' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
-                                    <i data-lucide="shield-alert" class="w-4 h-4"></i>
-                                    <span>${t('disputes')}</span>
+                                <button onclick="state.activeTab='disputes'; render();" class="w-full flex items-center space-x-3 px-3.5 lg:px-4 py-2.5 lg:py-3 rounded-xl text-xs lg:text-sm font-medium transition-colors ${state.activeTab==='disputes' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                    <i data-lucide="shield-alert" class="w-4 h-4 flex-shrink-0"></i>
+                                    <span class="truncate">${t('disputes')}</span>
                                 </button>
 
-                                <button onclick="state.activeTab='guide'; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='guide' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
-                                    <i data-lucide="help-circle" class="w-4 h-4"></i>
-                                    <span>${t('demoGuide')}</span>
+                                <button onclick="state.activeTab='guide'; render();" class="w-full flex items-center space-x-3 px-3.5 lg:px-4 py-2.5 lg:py-3 rounded-xl text-xs lg:text-sm font-medium transition-colors ${state.activeTab==='guide' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                    <i data-lucide="help-circle" class="w-4 h-4 flex-shrink-0"></i>
+                                    <span class="truncate">${t('demoGuide')}</span>
                                 </button>
 
-                                <button onclick="state.activeTab='admin'; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='admin' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
-                                    <i data-lucide="settings" class="w-4 h-4"></i>
-                                    <span>${t('demoAdmin')}</span>
+                                <button onclick="state.activeTab='admin'; render();" class="w-full flex items-center space-x-3 px-3.5 lg:px-4 py-2.5 lg:py-3 rounded-xl text-xs lg:text-sm font-medium transition-colors ${state.activeTab==='admin' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                    <i data-lucide="settings" class="w-4 h-4 flex-shrink-0"></i>
+                                    <span class="truncate">${t('demoAdmin')}</span>
                                 </button>
                             </nav>
                         </div>
 
-                        <div class="space-y-3 pt-6 border-t border-borderdark">
+                        <div class="hidden lg:block space-y-3 pt-6 border-t border-borderdark">
                             <button onclick="resetDemoData()" class="w-full py-2.5 px-3 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs font-semibold flex items-center justify-center space-x-2">
                                 <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
                                 <span>${t('resetData')}</span>
@@ -624,27 +625,28 @@
                     </aside>
 
                     <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
-                        <header class="h-16 px-8 border-b border-borderdark flex items-center justify-between bg-carddark/50 backdrop-blur sticky top-0 z-30">
-                            <div class="flex items-center space-x-4">
-                                <h1 class="text-lg font-bold capitalize tracking-tight">${t(state.activeTab)}</h1>
-                                <span class="px-2.5 py-1 rounded-full text-xs font-mono bg-acidlime/10 text-acidlime border border-acidlime/20">
+                        <header class="h-16 px-4 lg:px-8 border-b border-borderdark flex items-center justify-between bg-carddark/50 backdrop-blur sticky top-0 z-30">
+                            <div class="flex items-center space-x-3">
+                                <h1 class="text-base lg:text-lg font-bold capitalize tracking-tight">${t(state.activeTab)}</h1>
+                                <span class="hidden sm:inline-block px-2.5 py-1 rounded-full text-xs font-mono bg-acidlime/10 text-acidlime border border-acidlime/20">
                                     Karachi Pilot MVP
                                 </span>
                             </div>
 
-                            <div class="flex items-center space-x-4">
-                                <div class="relative">
-                                    <button onclick="toggleNotifications()" class="p-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-softgray hover:text-offwhite relative">
-                                        <i data-lucide="bell" class="w-5 h-5"></i>
-                                        ${state.notifications.filter(n => !n.read).length > 0 ? `
-                                            <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-hotorange rounded-full"></span>
-                                        ` : ''}
-                                    </button>
-                                </div>
+                            <div class="flex items-center space-x-3">
+                                <button onclick="toggleNotifications()" class="p-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-softgray hover:text-offwhite relative">
+                                    <i data-lucide="bell" class="w-5 h-5"></i>
+                                    ${state.notifications.filter(n => !n.read).length > 0 ? `
+                                        <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-hotorange rounded-full"></span>
+                                    ` : ''}
+                                </button>
+                                <button onclick="logout()" class="lg:hidden p-2 rounded-xl bg-zinc-800 text-red-400 hover:bg-zinc-700" title="Logout">
+                                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                                </button>
                             </div>
                         </header>
 
-                        <div class="p-8 max-w-7xl w-full mx-auto flex-1">
+                        <div class="p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto flex-1">
                             ${renderActiveTabContent()}
                         </div>
                     </main>
