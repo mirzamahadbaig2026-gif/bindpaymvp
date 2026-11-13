@@ -2,7 +2,7 @@
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>BindPay — Don't Just Pay. Bind the Deal.</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -38,16 +38,17 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: 'Inter', 'Noto Nastaliq Urdu', sans-serif; }
-        .urdu-font { font-family: 'Noto Nastaliq Urdu', 'Inter', sans-serif; line-height: 2.2; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', 'Noto Nastaliq Urdu', sans-serif; overflow-x: hidden; width: 100%; margin: 0; padding: 0; }
+        .urdu-font { font-family: 'Noto Nastaliq Urdu', 'Inter', sans-serif; line-height: 2.4; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #52525b; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
     </style>
 </head>
-<body class="bg-obsidian text-offwhite dark:bg-obsidian dark:text-offwhite bg-[#F5F2EA] text-[#0B0B0D] transition-colors duration-300 min-h-screen flex flex-col">
+<body class="bg-obsidian text-offwhite dark:bg-obsidian dark:text-offwhite bg-[#F5F2EA] text-[#0B0B0D] transition-colors duration-300 min-h-screen flex flex-col w-full overflow-x-hidden">
 
-    <div id="app" class="flex-1 flex flex-col"></div>
+    <div id="app" class="flex-1 flex flex-col w-full min-h-screen"></div>
 
     <script>
         // ==========================================
@@ -55,7 +56,6 @@
         // ==========================================
         const LOGO_LIGHT = "logolight.png"; // Local file for dark backgrounds
         const LOGO_DARK = "logodark.png";   // Local file for light backgrounds
-
         const TAGLINE_EN = "Don't Just Pay. Bind the Deal.";
         const TAGLINE_UR = "صرف ادائیگی نہ کریں، ڈیل پکی کریں۔";
 
@@ -65,8 +65,8 @@
         const i18n = {
             en: {
                 tagline: "Don't Just Pay. Bind the Deal.",
-                login: "Login",
-                register: "Register",
+                login: "Sign In",
+                register: "Create Account",
                 email: "Email Address",
                 password: "Password",
                 role: "User Role",
@@ -76,7 +76,7 @@
                 loginBtn: "Sign In to Dashboard",
                 demoAccounts: "Quick Demo Logins",
                 createAccount: "Create New Account",
-                alreadyHaveAcc: "Already have an account? Login",
+                alreadyHaveAcc: "Already have an account? Sign In",
                 fullName: "Full Name",
                 registerBtn: "Register Account",
                 logout: "Logout",
@@ -96,7 +96,7 @@
                 availableEarnings: "Available Earnings",
                 earningsOnHold: "Earnings on Hold",
                 disputedAmount: "Disputed Amount",
-                searchPlaceholder: "Search deals by ID, title, or party...",
+                searchPlaceholder: "Search ID, title, or party...",
                 filterAll: "All Statuses",
                 action: "Action",
                 status: "Status",
@@ -122,14 +122,14 @@
             },
             ur: {
                 tagline: "صرف ادائیگی نہ کریں، ڈیل پکی کریں۔",
-                login: "لاگ ان",
-                register: "رجسٹر کریں",
+                login: "لاگ ان کریں",
+                register: "نیا اکاؤنٹ",
                 email: "ای میل ایڈریس",
                 password: "پاس ورڈ",
                 role: "صارف کا کردار",
                 buyer: "خریدار",
                 seller: "فروخت کنندہ",
-                demoAdmin: "ڈیمو ایڈمن اور تنازعات کا حل",
+                demoAdmin: "ڈیمو ایڈمن اور تنازعات",
                 loginBtn: "ڈیش بورڈ میں سائن ان کریں",
                 demoAccounts: "فوری ڈیمو لاگ ان",
                 createAccount: "نیا اکاؤنٹ بنائیں",
@@ -144,7 +144,7 @@
                 disputes: "تنازعات",
                 notifications: "نوٹیفیکیشنز",
                 demoGuide: "ڈیمو گائیڈ",
-                resetData: "ڈیمو ڈیٹا ری سیٹ کریں",
+                resetData: "ڈیٹا ری سیٹ کریں",
                 totalDeals: "کل ڈیلز",
                 activeDeals: "فعال ڈیلز",
                 completedDeals: "مکمل ڈیلز",
@@ -153,7 +153,7 @@
                 availableEarnings: "دستیاب رقم",
                 earningsOnHold: "ہولڈ رقم",
                 disputedAmount: "متنازعہ رقم",
-                searchPlaceholder: "آئی ڈی، عنوان یا پارٹی کے ذریعے تلاش کریں...",
+                searchPlaceholder: "آئی ڈی یا عنوان تلاش کریں...",
                 filterAll: "تمام حالتیں",
                 action: "عمل",
                 status: "حالت",
@@ -163,15 +163,15 @@
                 sellerEmail: "فروخت کنندہ کا ای میل",
                 description: "پروڈکٹ / سروس کی تفصیل",
                 deliveryMethod: "ڈیلیوری کا طریقہ",
-                expectedDelivery: "متوقع ڈیلیوری کی تاریخ",
+                expectedDelivery: "متوقع تاریخ",
                 terms: "شرائط و ضوابط",
                 notes: "اضافی نوٹس",
-                sendDealProposal: "فروخت کنندہ کو ڈیل کی تجویز بھیجیں",
-                payNow: "ابھی ادائیگی کریں (نقلی اسکرو)",
-                confirmDelivery: "ڈیلیوری کی تصدیق کریں اور رقم جاری کریں",
+                sendDealProposal: "فروخت کنندہ کو تجویز بھیجیں",
+                payNow: "ابھی ادائیگی کریں (اسکرو)",
+                confirmDelivery: "ڈیلیوری کی تصدیق کریں",
                 raiseDispute: "تنازعہ اٹھائیں",
-                viewDetails: "تفصیلات اور ٹائم لائن دیکھیں",
-                updateStatus: "ڈیلیوری کی پیشرفت اپ ڈیٹ کریں",
+                viewDetails: "تفصیلات دیکھیں",
+                updateStatus: "ڈیلیوری اپ ڈیٹ کریں",
                 accept: "ڈیل قبول کریں",
                 reject: "ڈیل مسترد کریں",
                 success: "کامیابی",
@@ -195,8 +195,8 @@
                 expectedDate: "2026-03-25",
                 terms: "100% Escrow hold until inspection of laptop seals and screen verification.",
                 notes: "Fragile item. Pack with extra bubble wrap.",
-                status: "Payment Received", // Proposed, Accepted, Payment Received, Shipped, Delivered, Completed, Disputed, Rejected
-                shippingStage: "Ready for Dispatch", // Preparing Order, Ready for Dispatch, Shipped / Dispatched, Delivered
+                status: "Payment Received",
+                shippingStage: "Ready for Dispatch",
                 createdAt: "2026-03-18 14:30",
                 paymentRef: "PAY-PK-839201",
                 paymentMethod: "Bank Transfer (Meezan Bank)",
@@ -315,7 +315,8 @@
             selectedTxId: null,
             filterStatus: 'all',
             searchQuery: '',
-            modalState: null
+            modalState: null,
+            mobileMenuOpen: false
         };
 
         function saveState() {
@@ -364,12 +365,12 @@
 
             const toast = document.createElement('div');
             toast.id = 'toast-container';
-            toast.className = `fixed bottom-5 right-5 z-50 px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 text-sm font-medium transition-all duration-300 transform translate-y-0 ${
+            toast.className = `fixed bottom-4 right-4 left-4 sm:left-auto z-50 px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3 text-xs sm:text-sm font-medium transition-all duration-300 ${
                 type === 'success' ? 'bg-acidlime text-obsidian border border-lime-400' : 'bg-hotorange text-offwhite'
             }`;
             toast.innerHTML = `
-                <i data-lucide="${type === 'success' ? 'check-circle-2' : 'alert-circle'}" class="w-5 h-5 flex-shrink-0"></i>
-                <span>${message}</span>
+                <i data-lucide="${type === 'success' ? 'check-circle-2' : 'alert-circle'}" class="w-4 h-4 flex-shrink-0"></i>
+                <span class="flex-1">${message}</span>
             `;
             document.body.appendChild(toast);
             lucide.createIcons();
@@ -416,20 +417,20 @@
         // ==========================================
         function renderAuthScreen() {
             return `
-                <div class="min-h-screen flex flex-col justify-center items-center px-4 py-12 bg-obsidian text-offwhite dark:bg-obsidian dark:text-offwhite bg-[#F5F2EA] text-[#0B0B0D]">
-                    <div class="mb-8 text-center">
-                        <img src="${state.theme === 'dark' ? LOGO_LIGHT : LOGO_DARK}" alt="BindPay" class="h-12 mx-auto mb-3 object-contain">
-                        <p class="text-sm font-medium text-softgray tracking-wider uppercase">${t('tagline')}</p>
+                <div class="min-h-screen flex flex-col justify-center items-center p-4 sm:p-6 bg-obsidian text-offwhite dark:bg-obsidian dark:text-offwhite bg-[#F5F2EA] text-[#0B0B0D] w-full">
+                    <div class="mb-6 text-center">
+                        <img src="${state.theme === 'dark' ? LOGO_LIGHT : LOGO_DARK}" alt="BindPay" class="h-10 sm:h-12 mx-auto mb-2 object-contain">
+                        <p class="text-xs font-semibold text-softgray tracking-wider uppercase">${t('tagline')}</p>
                     </div>
 
-                    <div class="w-full max-w-md bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-8 shadow-2xl">
+                    <div class="w-full max-w-md bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 sm:p-8 shadow-2xl">
                         <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-2xl font-bold tracking-tight">${state.modalState === 'register' ? t('createAccount') : t('login')}</h2>
+                            <h2 class="text-xl sm:text-2xl font-bold tracking-tight">${state.modalState === 'register' ? t('createAccount') : t('login')}</h2>
                             <div class="flex space-x-2">
-                                <button onclick="toggleLang()" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-borderdark text-offwhite hover:bg-zinc-700">
+                                <button onclick="toggleLang()" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-zinc-800 text-offwhite hover:bg-zinc-700">
                                     ${state.lang === 'en' ? 'اردو' : 'English'}
                                 </button>
-                                <button onclick="toggleTheme()" class="p-1.5 rounded-lg bg-borderdark text-acidlime hover:bg-zinc-700">
+                                <button onclick="toggleTheme()" class="p-1.5 rounded-lg bg-zinc-800 text-acidlime hover:bg-zinc-700">
                                     <i data-lucide="${state.theme === 'dark' ? 'sun' : 'moon'}" class="w-4 h-4"></i>
                                 </button>
                             </div>
@@ -482,20 +483,20 @@
                                 <span>${t('demoAccounts')}</span>
                             </div>
                             <div class="grid grid-cols-2 gap-2 pt-1">
-                                <button onclick="fillLogin('buyer@bindpay.app', 'buyer123')" class="p-2 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-left">
-                                    <div class="font-semibold text-offwhite">Buyer Demo</div>
-                                    <div class="text-[10px] text-softgray">buyer@bindpay.app</div>
+                                <button onclick="fillLogin('buyer@bindpay.app', 'buyer123')" class="p-2.5 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-left">
+                                    <div class="font-semibold text-offwhite text-xs">Buyer Demo</div>
+                                    <div class="text-[10px] text-softgray truncate">buyer@bindpay.app</div>
                                 </button>
-                                <button onclick="fillLogin('seller@bindpay.app', 'seller123')" class="p-2 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-left">
-                                    <div class="font-semibold text-offwhite">Seller Demo</div>
-                                    <div class="text-[10px] text-softgray">seller@bindpay.app</div>
+                                <button onclick="fillLogin('seller@bindpay.app', 'seller123')" class="p-2.5 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-left">
+                                    <div class="font-semibold text-offwhite text-xs">Seller Demo</div>
+                                    <div class="text-[10px] text-softgray truncate">seller@bindpay.app</div>
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-8 text-center text-xs text-softgray">
-                        <p>BindPay Pakistan Pilot Testing Environment v2.5 • Secure Escrow Protection</p>
+                    <div class="mt-6 text-center text-[11px] text-softgray">
+                        <p>BindPay Pakistan Pilot Testing Environment • Secure Escrow Protection</p>
                     </div>
                 </div>
             `;
@@ -531,7 +532,7 @@
                     state.currentUser = user;
                     saveState();
                     render();
-                    showToast(`Logged in successfully as ${user.name} (${user.role.toUpperCase()})`);
+                    showToast(`Logged in successfully as ${user.name}`);
                 } else {
                     showToast("Invalid email or password. Try demo accounts.", "error");
                 }
@@ -539,28 +540,49 @@
         }
 
         // ==========================================
-        // 8. MAIN DASHBOARD CONTAINER & SIDEBAR
+        // 8. MAIN DASHBOARD CONTAINER & SIDEBAR DRAWER
         // ==========================================
         function renderDashboardContainer() {
             const role = state.currentUser.role;
             return `
-                <div class="flex-1 flex flex-col lg:flex-row bg-obsidian text-offwhite dark:bg-obsidian dark:text-offwhite bg-[#F5F2EA] text-[#0B0B0D] min-h-screen">
-                    <!-- Responsive Sidebar / Top Header for Mobile -->
-                    <aside class="w-full lg:w-72 bg-carddark dark:bg-carddark bg-white border-b lg:border-b-0 lg:border-r border-borderdark dark:border-borderdark border-borderlight flex flex-col justify-between p-4 lg:p-6 flex-shrink-0">
+                <div class="flex-1 flex flex-col lg:flex-row bg-obsidian text-offwhite dark:bg-obsidian dark:text-offwhite bg-[#F5F2EA] text-[#0B0B0D] min-h-screen w-full overflow-x-hidden">
+                    
+                    <!-- Mobile Top Navbar -->
+                    <header class="lg:hidden h-16 px-4 border-b border-borderdark flex items-center justify-between bg-carddark sticky top-0 z-40 w-full flex-shrink-0">
+                        <div class="flex items-center space-x-3">
+                            <button onclick="state.mobileMenuOpen = !state.mobileMenuOpen; render();" class="p-2 rounded-xl bg-zinc-800 text-softgray hover:text-offwhite" aria-label="Toggle Menu">
+                                <i data-lucide="${state.mobileMenuOpen ? 'x' : 'menu'}" class="w-5 h-5"></i>
+                            </button>
+                            <img src="${state.theme === 'dark' ? LOGO_LIGHT : LOGO_DARK}" alt="BindPay" class="h-6 object-contain">
+                        </div>
+
+                        <div class="flex items-center space-x-2">
+                            <button onclick="toggleNotifications()" class="p-2 rounded-xl bg-zinc-800 text-softgray relative">
+                                <i data-lucide="bell" class="w-4 h-4"></i>
+                                ${state.notifications.filter(n => !n.read).length > 0 ? `<span class="absolute top-1 right-1 w-2 h-2 bg-hotorange rounded-full"></span>` : ''}
+                            </button>
+                            <button onclick="toggleLang()" class="px-2 py-1 rounded-lg bg-zinc-800 text-offwhite text-xs font-bold">
+                                ${state.lang.toUpperCase()}
+                            </button>
+                        </div>
+                    </header>
+
+                    <!-- Mobile Slide-over Drawer Backdrop -->
+                    ${state.mobileMenuOpen ? `
+                        <div onclick="state.mobileMenuOpen = false; render();" class="fixed inset-0 bg-black/70 z-40 lg:hidden backdrop-blur-sm"></div>
+                    ` : ''}
+
+                    <!-- Sidebar (Desktop Fixed & Mobile Slide-over) -->
+                    <aside class="fixed lg:static inset-y-0 left-0 z-50 w-72 bg-carddark dark:bg-carddark bg-white border-r border-borderdark flex flex-col justify-between p-5 transform transition-transform duration-300 ${state.mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} flex-shrink-0 shadow-2xl lg:shadow-none">
                         <div>
-                            <div class="flex items-center justify-between mb-6 lg:mb-8">
-                                <img src="${state.theme === 'dark' ? LOGO_LIGHT : LOGO_DARK}" alt="BindPay" class="h-7 lg:h-8 object-contain">
-                                <div class="flex items-center space-x-2">
-                                    <button onclick="toggleLang()" class="px-2 py-1 rounded-lg bg-zinc-800 text-offwhite text-xs font-bold" title="Switch Language">
-                                        ${state.lang.toUpperCase()}
-                                    </button>
-                                    <button onclick="toggleTheme()" class="p-2 rounded-lg bg-zinc-800 text-acidlime">
-                                        <i data-lucide="${state.theme === 'dark' ? 'sun' : 'moon'}" class="w-4 h-4"></i>
-                                    </button>
-                                </div>
+                            <div class="flex items-center justify-between mb-6">
+                                <img src="${state.theme === 'dark' ? LOGO_LIGHT : LOGO_DARK}" alt="BindPay" class="h-7 object-contain">
+                                <button onclick="state.mobileMenuOpen = false; render();" class="lg:hidden p-1.5 rounded-lg bg-zinc-800 text-softgray">
+                                    <i data-lucide="x" class="w-5 h-5"></i>
+                                </button>
                             </div>
 
-                            <div class="mb-6 p-3 rounded-xl bg-obsidian/40 border border-borderdark flex items-center space-x-3">
+                            <div class="mb-6 p-3 rounded-xl bg-obsidian/60 border border-borderdark flex items-center space-x-3">
                                 <div class="w-10 h-10 rounded-full bg-acidlime text-obsidian font-bold flex items-center justify-center text-sm flex-shrink-0">
                                     ${state.currentUser.name.charAt(0)}
                                 </div>
@@ -570,49 +592,56 @@
                                 </div>
                             </div>
 
-                            <nav class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2 lg:space-y-1.5 lg:grid-cols-none">
-                                <button onclick="state.activeTab='overview'; render();" class="w-full flex items-center space-x-3 px-3.5 lg:px-4 py-2.5 lg:py-3 rounded-xl text-xs lg:text-sm font-medium transition-colors ${state.activeTab==='overview' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                            <nav class="space-y-1.5">
+                                <button onclick="state.activeTab='overview'; state.mobileMenuOpen=false; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='overview' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
                                     <i data-lucide="layout-dashboard" class="w-4 h-4 flex-shrink-0"></i>
-                                    <span class="truncate">${t('overview')}</span>
+                                    <span>${t('overview')}</span>
                                 </button>
 
                                 ${role === 'buyer' ? `
-                                    <button onclick="state.activeTab='create'; render();" class="w-full flex items-center space-x-3 px-3.5 lg:px-4 py-2.5 lg:py-3 rounded-xl text-xs lg:text-sm font-medium transition-colors ${state.activeTab==='create' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                    <button onclick="state.activeTab='create'; state.mobileMenuOpen=false; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='create' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
                                         <i data-lucide="plus-circle" class="w-4 h-4 flex-shrink-0"></i>
-                                        <span class="truncate">${t('createDeal')}</span>
+                                        <span>${t('createDeal')}</span>
                                     </button>
                                 ` : ''}
 
-                                <button onclick="state.activeTab='deals'; render();" class="w-full flex items-center space-x-3 px-3.5 lg:px-4 py-2.5 lg:py-3 rounded-xl text-xs lg:text-sm font-medium transition-colors ${state.activeTab==='deals' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                <button onclick="state.activeTab='deals'; state.mobileMenuOpen=false; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='deals' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
                                     <i data-lucide="briefcase" class="w-4 h-4 flex-shrink-0"></i>
-                                    <span class="truncate">${t('myDeals')}</span>
+                                    <span>${t('myDeals')}</span>
                                 </button>
 
                                 ${role === 'seller' ? `
-                                    <button onclick="state.activeTab='earnings'; render();" class="w-full flex items-center space-x-3 px-3.5 lg:px-4 py-2.5 lg:py-3 rounded-xl text-xs lg:text-sm font-medium transition-colors ${state.activeTab==='earnings' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                    <button onclick="state.activeTab='earnings'; state.mobileMenuOpen=false; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='earnings' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
                                         <i data-lucide="wallet" class="w-4 h-4 flex-shrink-0"></i>
-                                        <span class="truncate">${t('earnings')}</span>
+                                        <span>${t('earnings')}</span>
                                     </button>
                                 ` : ''}
 
-                                <button onclick="state.activeTab='disputes'; render();" class="w-full flex items-center space-x-3 px-3.5 lg:px-4 py-2.5 lg:py-3 rounded-xl text-xs lg:text-sm font-medium transition-colors ${state.activeTab==='disputes' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                <button onclick="state.activeTab='disputes'; state.mobileMenuOpen=false; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='disputes' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
                                     <i data-lucide="shield-alert" class="w-4 h-4 flex-shrink-0"></i>
-                                    <span class="truncate">${t('disputes')}</span>
+                                    <span>${t('disputes')}</span>
                                 </button>
 
-                                <button onclick="state.activeTab='guide'; render();" class="w-full flex items-center space-x-3 px-3.5 lg:px-4 py-2.5 lg:py-3 rounded-xl text-xs lg:text-sm font-medium transition-colors ${state.activeTab==='guide' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                <button onclick="state.activeTab='guide'; state.mobileMenuOpen=false; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='guide' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
                                     <i data-lucide="help-circle" class="w-4 h-4 flex-shrink-0"></i>
-                                    <span class="truncate">${t('demoGuide')}</span>
+                                    <span>${t('demoGuide')}</span>
                                 </button>
 
-                                <button onclick="state.activeTab='admin'; render();" class="w-full flex items-center space-x-3 px-3.5 lg:px-4 py-2.5 lg:py-3 rounded-xl text-xs lg:text-sm font-medium transition-colors ${state.activeTab==='admin' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                <button onclick="state.activeTab='admin'; state.mobileMenuOpen=false; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='admin' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
                                     <i data-lucide="settings" class="w-4 h-4 flex-shrink-0"></i>
-                                    <span class="truncate">${t('demoAdmin')}</span>
+                                    <span>${t('demoAdmin')}</span>
                                 </button>
                             </nav>
                         </div>
 
-                        <div class="hidden lg:block space-y-3 pt-6 border-t border-borderdark">
+                        <div class="space-y-3 pt-6 border-t border-borderdark">
+                            <div class="flex items-center justify-between lg:hidden mb-2">
+                                <span class="text-xs text-softgray">Theme & Lang</span>
+                                <div class="flex space-x-2">
+                                    <button onclick="toggleLang()" class="px-2 py-1 rounded bg-zinc-800 text-xs">${state.lang.toUpperCase()}</button>
+                                    <button onclick="toggleTheme()" class="p-1 rounded bg-zinc-800 text-acidlime"><i data-lucide="${state.theme === 'dark' ? 'sun' : 'moon'}" class="w-4 h-4"></i></button>
+                                </div>
+                            </div>
                             <button onclick="resetDemoData()" class="w-full py-2.5 px-3 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs font-semibold flex items-center justify-center space-x-2">
                                 <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
                                 <span>${t('resetData')}</span>
@@ -624,11 +653,12 @@
                         </div>
                     </aside>
 
-                    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
-                        <header class="h-16 px-4 lg:px-8 border-b border-borderdark flex items-center justify-between bg-carddark/50 backdrop-blur sticky top-0 z-30">
+                    <!-- Main Content Area -->
+                    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto w-full">
+                        <header class="hidden lg:flex h-16 px-8 border-b border-borderdark items-center justify-between bg-carddark/50 backdrop-blur sticky top-0 z-30">
                             <div class="flex items-center space-x-3">
-                                <h1 class="text-base lg:text-lg font-bold capitalize tracking-tight">${t(state.activeTab)}</h1>
-                                <span class="hidden sm:inline-block px-2.5 py-1 rounded-full text-xs font-mono bg-acidlime/10 text-acidlime border border-acidlime/20">
+                                <h1 class="text-lg font-bold capitalize tracking-tight">${t(state.activeTab)}</h1>
+                                <span class="px-2.5 py-1 rounded-full text-xs font-mono bg-acidlime/10 text-acidlime border border-acidlime/20">
                                     Karachi Pilot MVP
                                 </span>
                             </div>
@@ -636,12 +666,13 @@
                             <div class="flex items-center space-x-3">
                                 <button onclick="toggleNotifications()" class="p-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-softgray hover:text-offwhite relative">
                                     <i data-lucide="bell" class="w-5 h-5"></i>
-                                    ${state.notifications.filter(n => !n.read).length > 0 ? `
-                                        <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-hotorange rounded-full"></span>
-                                    ` : ''}
+                                    ${state.notifications.filter(n => !n.read).length > 0 ? `<span class="absolute top-1 right-1 w-2.5 h-2.5 bg-hotorange rounded-full"></span>` : ''}
                                 </button>
-                                <button onclick="logout()" class="lg:hidden p-2 rounded-xl bg-zinc-800 text-red-400 hover:bg-zinc-700" title="Logout">
-                                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                                <button onclick="toggleLang()" class="px-3 py-1.5 rounded-xl bg-zinc-800 text-offwhite text-xs font-bold">
+                                    ${state.lang.toUpperCase()}
+                                </button>
+                                <button onclick="toggleTheme()" class="p-2 rounded-xl bg-zinc-800 text-acidlime">
+                                    <i data-lucide="${state.theme === 'dark' ? 'sun' : 'moon'}" class="w-4 h-4"></i>
                                 </button>
                             </div>
                         </header>
@@ -728,71 +759,71 @@
             });
 
             return `
-                <div class="space-y-8">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div class="p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
+                <div class="space-y-6 w-full">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                        <div class="p-5 sm:p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
                             <div class="flex items-center justify-between text-softgray mb-3">
                                 <span class="text-xs uppercase font-semibold">${t('totalDeals')}</span>
                                 <i data-lucide="briefcase" class="w-5 h-5 text-acidlime"></i>
                             </div>
-                            <div class="text-3xl font-extrabold">${totalDeals}</div>
+                            <div class="text-2xl sm:text-3xl font-extrabold">${totalDeals}</div>
                             <div class="mt-2 text-xs text-softgray">${pendingDeals} Proposed, ${activeDeals} Active</div>
                         </div>
 
-                        <div class="p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
+                        <div class="p-5 sm:p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
                             <div class="flex items-center justify-between text-softgray mb-3">
                                 <span class="text-xs uppercase font-semibold">${role === 'seller' ? t('totalEarnings') : 'Payments Made'}</span>
                                 <i data-lucide="wallet" class="w-5 h-5 text-electricpurple"></i>
                             </div>
-                            <div class="text-3xl font-extrabold">${formatPKR(role === 'seller' ? totalEarnings : paymentsMade)}</div>
+                            <div class="text-2xl sm:text-3xl font-extrabold">${formatPKR(role === 'seller' ? totalEarnings : paymentsMade)}</div>
                             <div class="mt-2 text-xs text-softgray">Secure Escrow Settlement</div>
                         </div>
 
-                        <div class="p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
+                        <div class="p-5 sm:p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
                             <div class="flex items-center justify-between text-softgray mb-3">
                                 <span class="text-xs uppercase font-semibold">${role === 'seller' ? t('earningsOnHold') : 'Payments on Hold'}</span>
                                 <i data-lucide="lock" class="w-5 h-5 text-hotorange"></i>
                             </div>
-                            <div class="text-3xl font-extrabold">${formatPKR(role === 'seller' ? earningsOnHold : paymentsOnHold)}</div>
+                            <div class="text-2xl sm:text-3xl font-extrabold">${formatPKR(role === 'seller' ? earningsOnHold : paymentsOnHold)}</div>
                             <div class="mt-2 text-xs text-softgray">Protected in Escrow Vault</div>
                         </div>
 
-                        <div class="p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
+                        <div class="p-5 sm:p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
                             <div class="flex items-center justify-between text-softgray mb-3">
                                 <span class="text-xs uppercase font-semibold">${t('disputedAmount')}</span>
                                 <i data-lucide="alert-triangle" class="w-5 h-5 text-red-400"></i>
                             </div>
-                            <div class="text-3xl font-extrabold">${formatPKR(disputedAmount)}</div>
+                            <div class="text-2xl sm:text-3xl font-extrabold">${formatPKR(disputedAmount)}</div>
                             <div class="mt-2 text-xs text-softgray">Under Mediation Review</div>
                         </div>
                     </div>
 
-                    <div class="bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 shadow-lg">
-                        <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-lg font-bold tracking-tight">Recent Transactions</h3>
+                    <div class="bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-5 sm:p-6 shadow-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-base sm:text-lg font-bold tracking-tight">Recent Transactions</h3>
                             <button onclick="state.activeTab='deals'; render();" class="text-xs font-semibold text-acidlime hover:underline">View All</button>
                         </div>
 
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-sm">
+                        <div class="overflow-x-auto w-full">
+                            <table class="w-full text-left text-sm whitespace-nowrap">
                                 <thead class="border-b border-borderdark text-xs uppercase text-softgray">
                                     <tr>
-                                        <th class="pb-3">ID</th>
-                                        <th class="pb-3">${t('dealTitle')}</th>
-                                        <th class="pb-3">${role === 'seller' ? 'Buyer' : 'Seller'}</th>
-                                        <th class="pb-3">${t('amount')}</th>
-                                        <th class="pb-3">${t('status')}</th>
+                                        <th class="pb-3 pr-4">ID</th>
+                                        <th class="pb-3 pr-4">${t('dealTitle')}</th>
+                                        <th class="pb-3 pr-4">${role === 'seller' ? 'Buyer' : 'Seller'}</th>
+                                        <th class="pb-3 pr-4">${t('amount')}</th>
+                                        <th class="pb-3 pr-4">${t('status')}</th>
                                         <th class="pb-3 text-right">${t('action')}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-borderdark">
                                     ${myTxs.slice(0, 5).map(tx => `
                                         <tr class="hover:bg-zinc-800/40">
-                                            <td class="py-4 font-mono text-xs text-acidlime">${tx.id}</td>
-                                            <td class="py-4 font-medium">${tx.title}</td>
-                                            <td class="py-4 text-softgray">${role === 'seller' ? tx.buyerName : tx.sellerName}</td>
-                                            <td class="py-4 font-bold">${formatPKR(tx.amount)}</td>
-                                            <td class="py-4">
+                                            <td class="py-4 pr-4 font-mono text-xs text-acidlime">${tx.id}</td>
+                                            <td class="py-4 pr-4 font-medium">${tx.title}</td>
+                                            <td class="py-4 pr-4 text-softgray">${role === 'seller' ? tx.buyerName : tx.sellerName}</td>
+                                            <td class="py-4 pr-4 font-bold">${formatPKR(tx.amount)}</td>
+                                            <td class="py-4 pr-4">
                                                 <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${getStatusBadgeClass(tx.status)}">${tx.status}</span>
                                             </td>
                                             <td class="py-4 text-right">
@@ -827,14 +858,14 @@
         function renderCreateDealTab() {
             const randomId = "BP-" + Math.floor(10000 + Math.random() * 90000);
             return `
-                <div class="max-w-2xl mx-auto bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-8 shadow-2xl">
+                <div class="max-w-2xl mx-auto bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 sm:p-8 shadow-2xl w-full">
                     <div class="mb-6">
-                        <h2 class="text-xl font-bold tracking-tight">Create & Send Deal Proposal</h2>
+                        <h2 class="text-lg sm:text-xl font-bold tracking-tight">Create & Send Deal Proposal</h2>
                         <p class="text-xs text-softgray mt-1">As a Buyer, propose transaction terms and send them directly to the Seller for review and acceptance.</p>
                     </div>
 
-                    <form onsubmit="handleCreateDeal(event)" class="space-y-5">
-                        <div class="grid grid-cols-2 gap-4">
+                    <form onsubmit="handleCreateDeal(event)" class="space-y-4 sm:space-y-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">Transaction ID</label>
                                 <input type="text" id="newTxId" value="${randomId}" readonly class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-acidlime font-mono text-sm">
@@ -850,7 +881,7 @@
                             <input type="text" id="newTitle" required placeholder="e.g. Custom Web Development Service" class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite focus:border-acidlime outline-none text-sm">
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">${t('sellerEmail')}</label>
                                 <input type="email" id="newSellerEmail" required value="seller@bindpay.app" class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite focus:border-acidlime outline-none text-sm">
@@ -866,7 +897,7 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">${t('expectedDelivery')}</label>
                                 <input type="date" id="newDate" required class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite focus:border-acidlime outline-none text-sm">
@@ -940,7 +971,7 @@
             });
 
             return `
-                <div class="space-y-6">
+                <div class="space-y-6 w-full">
                     <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight p-4 rounded-2xl shadow-lg">
                         <div class="w-full sm:w-80 relative">
                             <i data-lucide="search" class="w-4 h-4 text-softgray absolute left-3.5 top-3.5"></i>
@@ -948,7 +979,7 @@
                         </div>
 
                         <div class="flex items-center space-x-3 w-full sm:w-auto">
-                            <select onchange="state.filterStatus=this.value; render();" class="px-4 py-2.5 rounded-xl bg-obsidian border border-borderdark text-offwhite text-sm outline-none focus:border-acidlime">
+                            <select onchange="state.filterStatus=this.value; render();" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-obsidian border border-borderdark text-offwhite text-sm outline-none focus:border-acidlime">
                                 <option value="all">${t('filterAll')}</option>
                                 <option value="Proposed">Proposed</option>
                                 <option value="Accepted">Accepted</option>
@@ -961,26 +992,26 @@
                         </div>
                     </div>
 
-                    <div class="bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 shadow-lg overflow-x-auto">
-                        <table class="w-full text-left text-sm">
+                    <div class="bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-5 sm:p-6 shadow-lg overflow-x-auto w-full">
+                        <table class="w-full text-left text-sm whitespace-nowrap">
                             <thead class="border-b border-borderdark text-xs uppercase text-softgray">
                                 <tr>
-                                    <th class="pb-3">ID</th>
-                                    <th class="pb-3">${t('dealTitle')}</th>
-                                    <th class="pb-3">${role === 'seller' ? 'Buyer' : 'Seller'}</th>
-                                    <th class="pb-3">${t('amount')}</th>
-                                    <th class="pb-3">${t('status')}</th>
+                                    <th class="pb-3 pr-4">ID</th>
+                                    <th class="pb-3 pr-4">${t('dealTitle')}</th>
+                                    <th class="pb-3 pr-4">${role === 'seller' ? 'Buyer' : 'Seller'}</th>
+                                    <th class="pb-3 pr-4">${t('amount')}</th>
+                                    <th class="pb-3 pr-4">${t('status')}</th>
                                     <th class="pb-3 text-right">${t('action')}</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-borderdark">
                                 ${filteredTxs.map(tx => `
                                     <tr class="hover:bg-zinc-800/40">
-                                        <td class="py-4 font-mono text-xs text-acidlime">${tx.id}</td>
-                                        <td class="py-4 font-medium">${tx.title}</td>
-                                        <td class="py-4 text-softgray">${role === 'seller' ? tx.buyerName : tx.sellerName}</td>
-                                        <td class="py-4 font-bold">${formatPKR(tx.amount)}</td>
-                                        <td class="py-4">
+                                        <td class="py-4 pr-4 font-mono text-xs text-acidlime">${tx.id}</td>
+                                        <td class="py-4 pr-4 font-medium">${tx.title}</td>
+                                        <td class="py-4 pr-4 text-softgray">${role === 'seller' ? tx.buyerName : tx.sellerName}</td>
+                                        <td class="py-4 pr-4 font-bold">${formatPKR(tx.amount)}</td>
+                                        <td class="py-4 pr-4">
                                             <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${getStatusBadgeClass(tx.status)}">${tx.status}</span>
                                         </td>
                                         <td class="py-4 text-right">
@@ -1020,46 +1051,46 @@
             });
 
             return `
-                <div class="space-y-8">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div class="p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
+                <div class="space-y-6 w-full">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                        <div class="p-5 sm:p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
                             <div class="text-xs uppercase font-semibold text-softgray mb-2">Total Earnings</div>
-                            <div class="text-3xl font-extrabold text-acidlime">${formatPKR(totalEarnings)}</div>
+                            <div class="text-2xl sm:text-3xl font-extrabold text-acidlime">${formatPKR(totalEarnings)}</div>
                         </div>
-                        <div class="p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
+                        <div class="p-5 sm:p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
                             <div class="text-xs uppercase font-semibold text-softgray mb-2">Available Balance</div>
-                            <div class="text-3xl font-extrabold">${formatPKR(availableEarnings)}</div>
+                            <div class="text-2xl sm:text-3xl font-extrabold">${formatPKR(availableEarnings)}</div>
                         </div>
-                        <div class="p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
+                        <div class="p-5 sm:p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
                             <div class="text-xs uppercase font-semibold text-softgray mb-2">Escrow on Hold</div>
-                            <div class="text-3xl font-extrabold text-hotorange">${formatPKR(earningsOnHold)}</div>
+                            <div class="text-2xl sm:text-3xl font-extrabold text-hotorange">${formatPKR(earningsOnHold)}</div>
                         </div>
-                        <div class="p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
+                        <div class="p-5 sm:p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
                             <div class="text-xs uppercase font-semibold text-softgray mb-2">Disputed Escrow</div>
-                            <div class="text-3xl font-extrabold text-red-400">${formatPKR(disputedAmount)}</div>
+                            <div class="text-2xl sm:text-3xl font-extrabold text-red-400">${formatPKR(disputedAmount)}</div>
                         </div>
                     </div>
 
-                    <div class="bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 shadow-lg">
-                        <h3 class="text-lg font-bold tracking-tight mb-4">Earnings Settlement History</h3>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-sm">
+                    <div class="bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-5 sm:p-6 shadow-lg">
+                        <h3 class="text-base sm:text-lg font-bold tracking-tight mb-4">Earnings Settlement History</h3>
+                        <div class="overflow-x-auto w-full">
+                            <table class="w-full text-left text-sm whitespace-nowrap">
                                 <thead class="border-b border-borderdark text-xs uppercase text-softgray">
                                     <tr>
-                                        <th class="pb-3">Transaction ID</th>
-                                        <th class="pb-3">${t('dealTitle')}</th>
-                                        <th class="pb-3">${t('amount')}</th>
-                                        <th class="pb-3">Settlement Status</th>
+                                        <th class="pb-3 pr-4">Transaction ID</th>
+                                        <th class="pb-3 pr-4">${t('dealTitle')}</th>
+                                        <th class="pb-3 pr-4">${t('amount')}</th>
+                                        <th class="pb-3 pr-4">Settlement Status</th>
                                         <th class="pb-3 text-right">Date</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-borderdark">
                                     ${myTxs.filter(tx => ['Completed', 'Payment Received', 'Shipped / Dispatched', 'Disputed'].includes(tx.status)).map(tx => `
                                         <tr class="hover:bg-zinc-800/40">
-                                            <td class="py-4 font-mono text-xs text-acidlime">${tx.id}</td>
-                                            <td class="py-4 font-medium">${tx.title}</td>
-                                            <td class="py-4 font-bold">${formatPKR(tx.amount)}</td>
-                                            <td class="py-4">
+                                            <td class="py-4 pr-4 font-mono text-xs text-acidlime">${tx.id}</td>
+                                            <td class="py-4 pr-4 font-medium">${tx.title}</td>
+                                            <td class="py-4 pr-4 font-bold">${formatPKR(tx.amount)}</td>
+                                            <td class="py-4 pr-4">
                                                 <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${tx.status === 'Completed' ? 'bg-acidlime/10 text-acidlime' : 'bg-hotorange/10 text-hotorange'}">
                                                     ${tx.status === 'Completed' ? 'Released to Available' : 'Escrow Secured'}
                                                 </span>
@@ -1081,18 +1112,18 @@
             const myTxs = state.transactions.filter(tx => (role === 'seller' ? tx.sellerEmail === state.currentUser.email : tx.buyerEmail === state.currentUser.email) && tx.dispute);
 
             return `
-                <div class="space-y-6">
-                    <div class="bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 shadow-lg">
-                        <h3 class="text-lg font-bold tracking-tight mb-4">Active & Resolved Disputes</h3>
+                <div class="space-y-6 w-full">
+                    <div class="bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-5 sm:p-6 shadow-lg">
+                        <h3 class="text-base sm:text-lg font-bold tracking-tight mb-4">Active & Resolved Disputes</h3>
                         <div class="space-y-4">
                             ${myTxs.map(tx => `
-                                <div class="p-5 rounded-xl bg-obsidian border border-borderdark flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                <div class="p-4 sm:p-5 rounded-xl bg-obsidian border border-borderdark flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                     <div>
                                         <div class="flex items-center space-x-3 mb-1">
                                             <span class="text-xs font-mono text-acidlime">${tx.id}</span>
                                             <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400 border border-red-500/20">${tx.dispute.reason}</span>
                                         </div>
-                                        <div class="font-bold text-base mb-1">${tx.title}</div>
+                                        <div class="font-bold text-sm sm:text-base mb-1">${tx.title}</div>
                                         <p class="text-xs text-softgray max-w-xl">${tx.dispute.description}</p>
                                     </div>
                                     <button onclick="openTxDetails('${tx.id}')" class="px-4 py-2 bg-acidlime text-obsidian font-bold rounded-xl text-xs hover:bg-lime-400 whitespace-nowrap">
@@ -1110,43 +1141,43 @@
         // --- DEMO GUIDE TAB ---
         function renderDemoGuideTab() {
             return `
-                <div class="max-w-3xl mx-auto space-y-8 bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-8 shadow-2xl">
+                <div class="max-w-3xl mx-auto space-y-6 bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 sm:p-8 shadow-2xl w-full">
                     <div>
-                        <h2 class="text-2xl font-bold tracking-tight mb-2">BindPay Karachi Pilot Testing Guide</h2>
+                        <h2 class="text-xl sm:text-2xl font-bold tracking-tight mb-2">BindPay Karachi Pilot Testing Guide</h2>
                         <p class="text-sm text-softgray">Follow this correct step-by-step walkthrough reflecting buyer-initiated proposals and secure escrow mechanics.</p>
                     </div>
 
-                    <div class="space-y-6 text-sm">
+                    <div class="space-y-4 text-sm">
                         <div class="p-4 rounded-xl bg-obsidian border border-borderdark space-y-2">
                             <div class="font-bold text-acidlime flex items-center space-x-2">
-                                <span class="w-6 h-6 rounded-full bg-acidlime/20 flex items-center justify-center text-xs">1</span>
+                                <span class="w-6 h-6 rounded-full bg-acidlime/20 flex items-center justify-center text-xs flex-shrink-0">1</span>
                                 <span>Step 1: Buyer Creates Deal Proposal</span>
                             </div>
-                            <p class="text-softgray pl-8">Log in as Buyer (<code class="text-acidlime">buyer@bindpay.app</code>), navigate to "Create Deal Proposal", specify Seller Email (<code class="text-acidlime">seller@bindpay.app</code>), amount in PKR, and dispatch the proposal.</p>
+                            <p class="text-softgray pl-0 sm:pl-8 text-xs sm:text-sm">Log in as Buyer (<code class="text-acidlime">buyer@bindpay.app</code>), navigate to "Create Deal Proposal", specify Seller Email (<code class="text-acidlime">seller@bindpay.app</code>), amount in PKR, and dispatch the proposal.</p>
                         </div>
 
                         <div class="p-4 rounded-xl bg-obsidian border border-borderdark space-y-2">
                             <div class="font-bold text-acidlime flex items-center space-x-2">
-                                <span class="w-6 h-6 rounded-full bg-acidlime/20 flex items-center justify-center text-xs">2</span>
+                                <span class="w-6 h-6 rounded-full bg-acidlime/20 flex items-center justify-center text-xs flex-shrink-0">2</span>
                                 <span>Step 2: Seller Accepts & Buyer Pays</span>
                             </div>
-                            <p class="text-softgray pl-8">Log out and log in as Seller (<code class="text-acidlime">seller@bindpay.app</code>). Go to "My Deals", view the proposal, and click <strong class="text-offwhite">Accept Deal</strong>. Then log back in as Buyer to complete the simulated payment via Bank Transfer, JazzCash, Easypaisa, or Demo Balance.</p>
+                            <p class="text-softgray pl-0 sm:pl-8 text-xs sm:text-sm">Log out and log in as Seller (<code class="text-acidlime">seller@bindpay.app</code>). Go to "My Deals", view the proposal, and click <strong class="text-offwhite">Accept Deal</strong>. Then log back in as Buyer to complete the simulated payment via Bank Transfer, JazzCash, Easypaisa, or Demo Balance.</p>
                         </div>
 
                         <div class="p-4 rounded-xl bg-obsidian border border-borderdark space-y-2">
                             <div class="font-bold text-acidlime flex items-center space-x-2">
-                                <span class="w-6 h-6 rounded-full bg-acidlime/20 flex items-center justify-center text-xs">3</span>
+                                <span class="w-6 h-6 rounded-full bg-acidlime/20 flex items-center justify-center text-xs flex-shrink-0">3</span>
                                 <span>Step 3: Seller Updates Delivery Progress</span>
                             </div>
-                            <p class="text-softgray pl-8">As Seller, once funds show as "Payment Received / On Hold", update delivery progress through Preparing Order -> Ready for Dispatch -> Shipped -> Delivered.</p>
+                            <p class="text-softgray pl-0 sm:pl-8 text-xs sm:text-sm">As Seller, once funds show as "Payment Received / On Hold", update delivery progress through Preparing Order -> Ready for Dispatch -> Shipped -> Delivered.</p>
                         </div>
 
                         <div class="p-4 rounded-xl bg-obsidian border border-borderdark space-y-2">
                             <div class="font-bold text-acidlime flex items-center space-x-2">
-                                <span class="w-6 h-6 rounded-full bg-acidlime/20 flex items-center justify-center text-xs">4</span>
+                                <span class="w-6 h-6 rounded-full bg-acidlime/20 flex items-center justify-center text-xs flex-shrink-0">4</span>
                                 <span>Step 4: Buyer Confirms Delivery or Raises Dispute</span>
                             </div>
-                            <p class="text-softgray pl-8">As Buyer, once marked delivered, either Confirm Delivery (releasing funds to Seller available balance) or Raise a Dispute to freeze funds for mediation.</p>
+                            <p class="text-softgray pl-0 sm:pl-8 text-xs sm:text-sm">As Buyer, once marked delivered, either Confirm Delivery (releasing funds to Seller available balance) or Raise a Dispute to freeze funds for mediation.</p>
                         </div>
                     </div>
                 </div>
@@ -1157,29 +1188,29 @@
         function renderAdminTab() {
             const disputes = state.transactions.filter(tx => tx.dispute);
             return `
-                <div class="space-y-6 max-w-4xl mx-auto">
-                    <div class="bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 shadow-lg">
-                        <h2 class="text-xl font-bold tracking-tight mb-2">Demo Admin & Dispute Resolution Panel</h2>
+                <div class="space-y-6 max-w-4xl mx-auto w-full">
+                    <div class="bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-5 sm:p-6 shadow-lg">
+                        <h2 class="text-lg sm:text-xl font-bold tracking-tight mb-2">Demo Admin & Dispute Resolution Panel</h2>
                         <p class="text-xs text-softgray mb-6">Simulate incubator / platform arbiter resolution for active escrow disputes.</p>
 
                         <div class="space-y-4">
                             ${disputes.map(tx => `
-                                <div class="p-5 rounded-xl bg-obsidian border border-borderdark space-y-4">
-                                    <div class="flex justify-between items-center">
+                                <div class="p-4 sm:p-5 rounded-xl bg-obsidian border border-borderdark space-y-4">
+                                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                                         <div class="flex items-center space-x-3">
                                             <span class="font-mono text-xs text-acidlime">${tx.id}</span>
-                                            <span class="font-bold">${tx.title}</span>
+                                            <span class="font-bold text-sm sm:text-base">${tx.title}</span>
                                         </div>
                                         <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-red-500/10 text-red-400">${formatPKR(tx.amount)}</span>
                                     </div>
                                     <div class="text-xs text-softgray">
                                         Reason: <strong class="text-offwhite">${tx.dispute.reason}</strong> — ${tx.dispute.description}
                                     </div>
-                                    <div class="flex flex-wrap gap-3 pt-2 border-t border-borderdark">
-                                        <button onclick="resolveDispute('${tx.id}', 'buyer')" class="px-4 py-2 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-semibold hover:bg-blue-500/20">
+                                    <div class="flex flex-col sm:flex-row gap-3 pt-2 border-t border-borderdark">
+                                        <button onclick="resolveDispute('${tx.id}', 'buyer')" class="px-4 py-2.5 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-semibold hover:bg-blue-500/20 text-center">
                                             Resolve in Buyer's Favour (Refund)
                                         </button>
-                                        <button onclick="resolveDispute('${tx.id}', 'seller')" class="px-4 py-2 rounded-xl bg-acidlime/10 text-acidlime border border-acidlime/20 text-xs font-semibold hover:bg-acidlime/20">
+                                        <button onclick="resolveDispute('${tx.id}', 'seller')" class="px-4 py-2.5 rounded-xl bg-acidlime/10 text-acidlime border border-acidlime/20 text-xs font-semibold hover:bg-acidlime/20 text-center">
                                             Resolve in Seller's Favour (Release Funds)
                                         </button>
                                     </div>
@@ -1237,30 +1268,30 @@
 
             const modalEl = document.createElement('div');
             modalEl.id = 'global-modal';
-            modalEl.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-obsidian/80 backdrop-blur-sm overflow-y-auto';
+            modalEl.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-obsidian/80 backdrop-blur-sm overflow-y-auto w-full';
 
             modalEl.innerHTML = `
-                <div class="w-full max-w-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 shadow-2xl space-y-6 my-8">
+                <div class="w-full max-w-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-5 sm:p-6 shadow-2xl space-y-5 my-8">
                     <div class="flex justify-between items-center border-b border-borderdark pb-4">
                         <div>
                             <span class="text-xs font-mono text-acidlime">${tx.id}</span>
-                            <h3 class="text-lg font-bold">${tx.title}</h3>
+                            <h3 class="text-base sm:text-lg font-bold">${tx.title}</h3>
                         </div>
                         <button onclick="closeModal()" class="p-2 rounded-xl bg-zinc-800 text-softgray hover:text-offwhite">
                             <i data-lucide="x" class="w-5 h-5"></i>
                         </button>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                         <div class="p-3 rounded-xl bg-obsidian border border-borderdark">
                             <div class="text-xs text-softgray">Seller</div>
                             <div class="font-semibold">${tx.sellerName}</div>
-                            <div class="text-[11px] text-softgray">${tx.sellerEmail}</div>
+                            <div class="text-[11px] text-softgray truncate">${tx.sellerEmail}</div>
                         </div>
                         <div class="p-3 rounded-xl bg-obsidian border border-borderdark">
                             <div class="text-xs text-softgray">Buyer</div>
                             <div class="font-semibold">${tx.buyerName}</div>
-                            <div class="text-[11px] text-softgray">${tx.buyerEmail}</div>
+                            <div class="text-[11px] text-softgray truncate">${tx.buyerEmail}</div>
                         </div>
                     </div>
 
@@ -1281,21 +1312,21 @@
 
                     <div class="p-4 rounded-xl bg-obsidian border border-borderdark space-y-3">
                         <div class="text-xs font-bold uppercase text-softgray">Delivery Progress Stage</div>
-                        <div class="flex justify-between text-xs font-semibold">
-                            <span id="stage-1">1. Preparing</span>
-                            <span id="stage-2">2. Ready</span>
-                            <span id="stage-3">3. Shipped</span>
-                            <span id="stage-4">4. Delivered</span>
+                        <div class="grid grid-cols-2 sm:flex sm:justify-between text-xs font-semibold gap-2">
+                            <span class="text-acidlime">1. Preparing</span>
+                            <span>2. Ready</span>
+                            <span>3. Shipped</span>
+                            <span>4. Delivered</span>
                         </div>
                         ${!isBuyer && ['Payment Received', 'Shipped / Dispatched'].includes(tx.status) ? `
-                            <div class="pt-2 flex items-center space-x-2">
-                                <select id="updateStageSelect" class="flex-1 px-3 py-2 rounded-lg bg-zinc-800 text-xs text-offwhite border border-borderdark">
+                            <div class="pt-2 flex flex-col sm:flex-row items-center gap-2">
+                                <select id="updateStageSelect" class="w-full sm:flex-1 px-3 py-2 rounded-lg bg-zinc-800 text-xs text-offwhite border border-borderdark">
                                     <option value="Preparing Order">Preparing Order</option>
                                     <option value="Ready for Dispatch">Ready for Dispatch</option>
                                     <option value="Shipped / Dispatched">Shipped / Dispatched</option>
                                     <option value="Delivered">Delivered</option>
                                 </select>
-                                <button onclick="updateDeliveryStage('${tx.id}')" class="px-4 py-2 rounded-lg bg-acidlime text-obsidian font-bold text-xs">
+                                <button onclick="updateDeliveryStage('${tx.id}')" class="w-full sm:w-auto px-4 py-2 rounded-lg bg-acidlime text-obsidian font-bold text-xs">
                                     Update Stage
                                 </button>
                             </div>
@@ -1307,44 +1338,43 @@
                         <div class="space-y-2 max-h-40 overflow-y-auto pr-2">
                             ${tx.timeline.map(item => `
                                 <div class="text-xs flex items-start space-x-3 p-2 rounded-lg bg-obsidian border border-borderdark/60">
-                                    <span class="font-mono text-softgray text-[10px]">${item.time}</span>
+                                    <span class="font-mono text-softgray text-[10px] whitespace-nowrap">${item.time}</span>
                                     <span class="text-offwhite flex-1">${item.event}</span>
                                 </div>
                             `).join('')}
                         </div>
                     </div>
 
-                    <div class="pt-4 border-t border-borderdark flex flex-wrap gap-3 justify-end" id="modal-action-buttons">
+                    <div class="pt-4 border-t border-borderdark flex flex-col-reverse sm:flex-row gap-3 justify-end" id="modal-action-buttons">
                         <!-- Dynamically injected action buttons -->
                     </div>
                 </div>
             `;
             document.body.appendChild(modalEl);
 
-            // Render conditional action buttons safely without syntax errors
             const actionContainer = document.getElementById('modal-action-buttons');
             if (actionContainer) {
                 let buttonsHtml = '';
                 if (!isBuyer && tx.status === 'Proposed') {
                     buttonsHtml += `
-                        <button onclick="rejectDeal('${tx.id}')" class="px-4 py-2.5 rounded-xl bg-red-500/10 text-red-400 font-bold text-xs hover:bg-red-500/20">Reject Proposal</button>
-                        <button onclick="acceptDeal('${tx.id}')" class="px-5 py-2.5 rounded-xl bg-acidlime text-obsidian font-bold text-xs hover:bg-lime-400">Accept Deal Proposal</button>
+                        <button onclick="rejectDeal('${tx.id}')" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-red-500/10 text-red-400 font-bold text-xs hover:bg-red-500/20">Reject Proposal</button>
+                        <button onclick="acceptDeal('${tx.id}')" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-acidlime text-obsidian font-bold text-xs hover:bg-lime-400">Accept Deal Proposal</button>
                     `;
                 }
                 if (isBuyer && tx.status === 'Accepted') {
                     buttonsHtml += `
-                        <button onclick="openPaymentScreen('${tx.id}')" class="px-6 py-3 rounded-xl bg-acidlime text-obsidian font-extrabold text-sm hover:bg-lime-400 shadow-lg shadow-acidlime/20">
+                        <button onclick="openPaymentScreen('${tx.id}')" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-acidlime text-obsidian font-extrabold text-sm hover:bg-lime-400 shadow-lg shadow-acidlime/20 text-center">
                             Proceed to Virtual Payment (${formatPKR(tx.amount)})
                         </button>
                     `;
                 }
                 if (isBuyer && (tx.status === 'Shipped / Dispatched' || tx.shippingStage === 'Delivered') && tx.status !== 'Completed') {
                     buttonsHtml += `
-                        <button onclick="openDisputeForm('${tx.id}')" class="px-4 py-2.5 rounded-xl bg-red-500/10 text-red-400 font-bold text-xs hover:bg-red-500/20">Raise Dispute</button>
-                        <button onclick="confirmDelivery('${tx.id}')" class="px-5 py-2.5 rounded-xl bg-acidlime text-obsidian font-bold text-xs hover:bg-lime-400">Confirm Delivery & Release Funds</button>
+                        <button onclick="openDisputeForm('${tx.id}')" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-red-500/10 text-red-400 font-bold text-xs hover:bg-red-500/20">Raise Dispute</button>
+                        <button onclick="confirmDelivery('${tx.id}')" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-acidlime text-obsidian font-bold text-xs hover:bg-lime-400">Confirm Delivery & Release Funds</button>
                     `;
                 }
-                buttonsHtml += `<button onclick="closeModal()" class="px-4 py-2.5 rounded-xl bg-zinc-800 text-xs font-semibold hover:bg-zinc-700">Close</button>`;
+                buttonsHtml += `<button onclick="closeModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-zinc-800 text-xs font-semibold hover:bg-zinc-700">Close</button>`;
                 actionContainer.innerHTML = buttonsHtml;
             }
 
@@ -1361,7 +1391,7 @@
             saveState();
             closeModal();
             render();
-            showToast("Deal proposal accepted successfully! Buyer can now make escrow payment.");
+            showToast("Deal proposal accepted successfully!");
         }
 
         function rejectDeal(txId) {
@@ -1383,21 +1413,21 @@
 
             const modalEl = document.createElement('div');
             modalEl.id = 'global-modal';
-            modalEl.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-obsidian/80 backdrop-blur-sm';
+            modalEl.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-obsidian/80 backdrop-blur-sm w-full';
             modalEl.innerHTML = `
-                <div class="w-full max-w-lg bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 shadow-2xl space-y-6">
+                <div class="w-full max-w-lg bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 shadow-2xl space-y-5">
                     <div class="flex justify-between items-center border-b border-borderdark pb-4">
-                        <h3 class="text-lg font-bold">Simulated Secure Payment Gateway</h3>
+                        <h3 class="text-base sm:text-lg font-bold">Simulated Secure Payment Gateway</h3>
                         <button onclick="closeModal()" class="p-2 rounded-xl bg-zinc-800 text-softgray hover:text-offwhite"><i data-lucide="x" class="w-5 h-5"></i></button>
                     </div>
                     <div class="space-y-4 text-sm">
                         <div class="p-4 rounded-xl bg-obsidian border border-borderdark space-y-1">
                             <div class="text-xs text-softgray">Amount to Secure in Escrow</div>
-                            <div class="text-2xl font-extrabold text-acidlime">${formatPKR(tx.amount)}</div>
+                            <div class="text-xl sm:text-2xl font-extrabold text-acidlime">${formatPKR(tx.amount)}</div>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold uppercase text-softgray mb-2">Select Payment Simulation Method</label>
-                            <div class="grid grid-cols-2 gap-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <label class="p-3 rounded-xl bg-obsidian border border-borderdark flex items-center space-x-3 cursor-pointer hover:border-acidlime">
                                     <input type="radio" name="payMethod" value="Bank Transfer (Meezan Bank)" checked class="text-acidlime">
                                     <span>Bank Transfer</span>
@@ -1488,11 +1518,11 @@
             closeModal();
             const modalEl = document.createElement('div');
             modalEl.id = 'global-modal';
-            modalEl.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-obsidian/80 backdrop-blur-sm';
+            modalEl.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-obsidian/80 backdrop-blur-sm w-full';
             modalEl.innerHTML = `
-                <div class="w-full max-w-lg bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 shadow-2xl space-y-6">
+                <div class="w-full max-w-lg bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 shadow-2xl space-y-5">
                     <div class="flex justify-between items-center border-b border-borderdark pb-4">
-                        <h3 class="text-lg font-bold">Raise Escrow Dispute</h3>
+                        <h3 class="text-base sm:text-lg font-bold">Raise Escrow Dispute</h3>
                         <button onclick="closeModal()" class="p-2 rounded-xl bg-zinc-800 text-softgray hover:text-offwhite"><i data-lucide="x" class="w-5 h-5"></i></button>
                     </div>
                     <form onsubmit="submitDispute(event, '${txId}')" class="space-y-4 text-sm">
