@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BindPay — Don't Just Pay. Bind the Deal.</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#0B0B0D',
+                        offwhite: '#F5F2EA',
+                        acidlime: '#C8FF32',
+                        electricpurple: '#8B5CF6',
+                        hotorange: '#FF5A36',
+                        softgray: '#A7A7A7',
+                        carddark: '#161619',
+                        cardlight: '#FFFFFF',
+                        borderdark: '#27272A',
+                        borderlight: '#E4E4E7'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Nastaliq Urdu', 'sans-serif'],
+                        urdu: ['Noto Nastaliq Urdu', 'Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Inter & Noto Nastaliq Urdu -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', 'Noto Nastaliq Urdu', sans-serif; }
+        .urdu-font { font-family: 'Noto Nastaliq Urdu', 'Inter', sans-serif; line-height: 2.2; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #52525b; border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-obsidian text-offwhite dark:bg-obsidian dark:text-offwhite bg-[#F5F2EA] text-[#0B0B0D] transition-colors duration-300 min-h-screen flex flex-col">
+
+    <div id="app" class="flex-1 flex flex-col"></div>
+
+    <script>
+        // ==========================================
+        // 1. BRAND ASSETS & CONSTANTS
+        // ==========================================
+        const LOGO_LIGHT = "https://i.imgur.com/W2C6b8F.png"; // Provided light logo for dark backgrounds
+        const LOGO_DARK = "https://i.imgur.com/83Z937Q.png";  // Provided dark logo for light backgrounds
+
+        const TAGLINE_EN = "Don't Just Pay. Bind the Deal.";
+        const TAGLINE_UR = "صرف ادائیگی نہ کریں، ڈیل پکی کریں۔";
+
+        // ==========================================
+        // 2. INTERNATIONALIZATION (ENGLISH & URDU)
+        // ==========================================
+        const i18n = {
+            en: {
+                tagline: "Don't Just Pay. Bind the Deal.",
+                login: "Login",
+                register: "Register",
+                email: "Email Address",
+                password: "Password",
+                role: "User Role",
+                buyer: "Buyer",
+                seller: "Seller",
+                demoAdmin: "Demo Admin & Resolution",
+                loginBtn: "Sign In to Dashboard",
+                demoAccounts: "Quick Demo Logins",
+                createAccount: "Create New Account",
+                alreadyHaveAcc: "Already have an account? Login",
+                fullName: "Full Name",
+                registerBtn: "Register Account",
+                logout: "Logout",
+                overview: "Overview",
+                myDeals: "My Transactions & Deals",
+                createDeal: "Create Deal Proposal",
+                earnings: "Earnings & Payouts",
+                disputes: "Disputes",
+                notifications: "Notifications",
+                demoGuide: "Demo Guide",
+                resetData: "Reset Demo Data",
+                totalDeals: "Total Deals",
+                activeDeals: "Active Deals",
+                completedDeals: "Completed Deals",
+                pendingDeals: "Pending Proposals",
+                totalEarnings: "Total Earnings",
+                availableEarnings: "Available Earnings",
+                earningsOnHold: "Earnings on Hold",
+                disputedAmount: "Disputed Amount",
+                searchPlaceholder: "Search deals by ID, title, or party...",
+                filterAll: "All Statuses",
+                action: "Action",
+                status: "Status",
+                amount: "Amount",
+                date: "Date",
+                dealTitle: "Deal Title",
+                sellerEmail: "Seller Email",
+                description: "Product / Service Description",
+                deliveryMethod: "Delivery Method",
+                expectedDelivery: "Expected Delivery Date",
+                terms: "Terms and Conditions",
+                notes: "Additional Notes",
+                sendDealProposal: "Send Deal Proposal to Seller",
+                payNow: "PAY NOW (Simulated Escrow)",
+                confirmDelivery: "Confirm Delivery & Release Funds",
+                raiseDispute: "Raise a Dispute",
+                viewDetails: "View Details & Timeline",
+                updateStatus: "Update Delivery Progress",
+                accept: "Accept Deal",
+                reject: "Reject Deal",
+                success: "Success",
+                error: "Error"
+            },
+            ur: {
+                tagline: "صرف ادائیگی نہ کریں، ڈیل پکی کریں۔",
+                login: "لاگ ان",
+                register: "رجسٹر کریں",
+                email: "ای میل ایڈریس",
+                password: "پاس ورڈ",
+                role: "صارف کا کردار",
+                buyer: "خریدار",
+                seller: "فروخت کنندہ",
+                demoAdmin: "ڈیمو ایڈمن اور تنازعات کا حل",
+                loginBtn: "ڈیش بورڈ میں سائن ان کریں",
+                demoAccounts: "فوری ڈیمو لاگ ان",
+                createAccount: "نیا اکاؤنٹ بنائیں",
+                alreadyHaveAcc: "پہلے سے اکاؤنٹ ہے؟ لاگ ان کریں",
+                fullName: "پورا نام",
+                registerBtn: "اکاؤنٹ رجسٹر کریں",
+                logout: "لاگ آؤٹ",
+                overview: "جائزہ",
+                myDeals: "میری ڈیلز اور لین دین",
+                createDeal: "ڈیل کی تجویز بنائیں",
+                earnings: "آمدنی اور ادائگی",
+                disputes: "تنازعات",
+                notifications: "نوٹیفیکیشنز",
+                demoGuide: "ڈیمو گائیڈ",
+                resetData: "ڈیمو ڈیٹا ری سیٹ کریں",
+                totalDeals: "کل ڈیلز",
+                activeDeals: "فعال ڈیلز",
+                completedDeals: "مکمل ڈیلز",
+                pendingDeals: "زیر التوا تجاویز",
+                totalEarnings: "کل آمدنی",
+                availableEarnings: "دستیاب رقم",
+                earningsOnHold: "ہولڈ رقم",
+                disputedAmount: "متنازعہ رقم",
+                searchPlaceholder: "آئی ڈی، عنوان یا پارٹی کے ذریعے تلاش کریں...",
+                filterAll: "تمام حالتیں",
+                action: "عمل",
+                status: "حالت",
+                amount: "رقم",
+                date: "تاریخ",
+                dealTitle: "ڈیل کا عنوان",
+                sellerEmail: "فروخت کنندہ کا ای میل",
+                description: "پروڈکٹ / سروس کی تفصیل",
+                deliveryMethod: "ڈیلیوری کا طریقہ",
+                expectedDelivery: "متوقع ڈیلیوری کی تاریخ",
+                terms: "شرائط و ضوابط",
+                notes: "اضافی نوٹس",
+                sendDealProposal: "فروخت کنندہ کو ڈیل کی تجویز بھیجیں",
+                payNow: "ابھی ادائیگی کریں (نقلی اسکرو)",
+                confirmDelivery: "ڈیلیوری کی تصدیق کریں اور رقم جاری کریں",
+                raiseDispute: "تنازعہ اٹھائیں",
+                viewDetails: "تفصیلات اور ٹائم لائن دیکھیں",
+                updateStatus: "ڈیلیوری کی پیشرفت اپ ڈیٹ کریں",
+                accept: "ڈیل قبول کریں",
+                reject: "ڈیل مسترد کریں",
+                success: "کامیابی",
+                error: "خرابی"
+            }
+        };
+
+        // ==========================================
+        // 3. INITIAL MOCK DATA & STORAGE STATE
+        // ==========================================
+        const initialTransactions = [
+            {
+                id: "BP-98421",
+                title: "MacBook Pro M2 16-inch 512GB",
+                sellerEmail: "seller@bindpay.app",
+                sellerName: "Ahmad Electronics PK",
+                buyerEmail: "buyer@bindpay.app",
+                buyerName: "Usman Tariq",
+                amount: 345000,
+                deliveryMethod: "TCS Courier (Insured)",
+                expectedDate: "2026-03-25",
+                terms: "100% Escrow hold until inspection of laptop seals and screen verification.",
+                notes: "Fragile item. Pack with extra bubble wrap.",
+                status: "Payment Received", // Proposed, Accepted, Payment Received, Shipped, Delivered, Completed, Disputed, Rejected
+                shippingStage: "Ready for Dispatch", // Preparing Order, Ready for Dispatch, Shipped / Dispatched, Delivered
+                createdAt: "2026-03-18 14:30",
+                paymentRef: "PAY-PK-839201",
+                paymentMethod: "Bank Transfer (Meezan Bank)",
+                timeline: [
+                    { time: "2026-03-18 14:30", event: "Deal proposal created by buyer Usman Tariq and sent to seller." },
+                    { time: "2026-03-18 15:10", event: "Deal accepted by seller Ahmad Electronics PK." },
+                    { time: "2026-03-18 15:15", event: "Simulated payment of Rs. 345,000 received and secured in BindPay Escrow." }
+                ],
+                dispute: null
+            },
+            {
+                id: "BP-83712",
+                title: "Custom Shopify E-Commerce Store Setup",
+                sellerEmail: "seller@bindpay.app",
+                sellerName: "Ahmad Electronics PK",
+                buyerEmail: "buyer@bindpay.app",
+                buyerName: "Usman Tariq",
+                amount: 85000,
+                deliveryMethod: "Digital Transfer / GitHub",
+                expectedDate: "2026-03-22",
+                terms: "Milestone escrow: 100% held until live store deployment.",
+                notes: "Includes payment gateway integration.",
+                status: "Completed",
+                shippingStage: "Delivered",
+                createdAt: "2026-03-10 10:00",
+                paymentRef: "PAY-PK-192834",
+                paymentMethod: "JazzCash Wallet",
+                timeline: [
+                    { time: "2026-03-10 10:00", event: "Deal proposal created by buyer." },
+                    { time: "2026-03-10 11:30", event: "Deal accepted and paid Rs. 85,000." },
+                    { time: "2026-03-15 18:00", event: "Service marked as Delivered by seller." },
+                    { time: "2026-03-16 09:15", event: "Delivery confirmed by buyer. Rs. 85,000 transferred to seller available balance." }
+                ],
+                dispute: null
+            },
+            {
+                id: "BP-55219",
+                title: "Sony Alpha a7IV Camera Body with Lens",
+                sellerEmail: "techhub@bindpay.app",
+                sellerName: "TechHub Lahore",
+                buyerEmail: "buyer@bindpay.app",
+                buyerName: "Usman Tariq",
+                amount: 490000,
+                deliveryMethod: "Daewoo Cargo",
+                expectedDate: "2026-03-28",
+                terms: "Original box and warranty card required upon delivery.",
+                notes: "Check shutter count before dispatch.",
+                status: "Disputed",
+                shippingStage: "Shipped / Dispatched",
+                createdAt: "2026-03-12 16:45",
+                paymentRef: "PAY-PK-556102",
+                paymentMethod: "BindPay Demo Balance",
+                timeline: [
+                    { time: "2026-03-12 16:45", event: "Deal created by buyer." },
+                    { time: "2026-03-13 10:00", event: "Payment completed and held in escrow." },
+                    { time: "2026-03-15 12:00", event: "Shipped via Daewoo Cargo." },
+                    { time: "2026-03-17 14:00", event: "Dispute raised by buyer: Damaged Product (Lens mount scratch)." }
+                ],
+                dispute: {
+                    id: "DSP-3310",
+                    reason: "Damaged Product",
+                    description: "The camera mount has visible scratches and sensor dust not mentioned in listing.",
+                    notes: "Unboxing video recorded and attached.",
+                    date: "2026-03-17 14:00",
+                    status: "Open"
+                }
+            },
+            {
+                id: "BP-77390",
+                title: "UI/UX Figma Design System for FinTech App",
+                sellerEmail: "seller@bindpay.app",
+                sellerName: "Ahmad Electronics PK",
+                buyerEmail: "sarah@bindpay.app",
+                buyerName: "Sarah Khan",
+                amount: 120000,
+                deliveryMethod: "Figma Cloud Link",
+                expectedDate: "2026-03-20",
+                terms: "Full component library handover with dark mode tokens.",
+                notes: "",
+                status: "Proposed",
+                shippingStage: "Preparing Order",
+                createdAt: "2026-03-18 18:00",
+                paymentRef: null,
+                paymentMethod: null,
+                timeline: [
+                    { time: "2026-03-18 18:00", event: "Deal proposal created by buyer Sarah Khan and sent to seller Ahmad Electronics PK." }
+                ],
+                dispute: null
+            }
+        ];
+
+        const initialUsers = [
+            { email: "seller@bindpay.app", password: "seller123", name: "Ahmad Electronics PK", role: "seller" },
+            { email: "buyer@bindpay.app", password: "buyer123", name: "Usman Tariq", role: "buyer" },
+            { email: "techhub@bindpay.app", password: "tech123", name: "TechHub Lahore", role: "seller" },
+            { email: "sarah@bindpay.app", password: "sarah123", name: "Sarah Khan", role: "buyer" }
+        ];
+
+        const initialNotifications = [
+            { id: 1, text: "Deal BP-98421 payment received and secured in BindPay Escrow.", time: "2 days ago", read: false },
+            { id: 2, text: "New dispute raised on transaction BP-55219.", time: "Yesterday", read: false },
+            { id: 3, text: "Deal BP-83712 completed successfully. Rs. 85,000 released.", time: "3 days ago", read: true }
+        ];
+
+        // ==========================================
+        // 4. APPLICATION STATE MANAGER
+        // ==========================================
+        let state = {
+            currentUser: JSON.parse(localStorage.getItem('bindpay_user')) || null,
+            lang: localStorage.getItem('bindpay_lang') || 'en',
+            theme: localStorage.getItem('bindpay_theme') || 'dark',
+            transactions: JSON.parse(localStorage.getItem('bindpay_txs')) || initialTransactions,
+            users: JSON.parse(localStorage.getItem('bindpay_users')) || initialUsers,
+            notifications: JSON.parse(localStorage.getItem('bindpay_notifs')) || initialNotifications,
+            activeTab: 'overview',
+            selectedTxId: null,
+            filterStatus: 'all',
+            searchQuery: '',
+            modalState: null
+        };
+
+        function saveState() {
+            localStorage.setItem('bindpay_user', JSON.stringify(state.currentUser));
+            localStorage.setItem('bindpay_lang', state.lang);
+            localStorage.setItem('bindpay_theme', state.theme);
+            localStorage.setItem('bindpay_txs', JSON.stringify(state.transactions));
+            localStorage.setItem('bindpay_users', JSON.stringify(state.users));
+            localStorage.setItem('bindpay_notifs', JSON.stringify(state.notifications));
+        }
+
+        function t(key) {
+            return i18n[state.lang][key] || key;
+        }
+
+        function formatPKR(amount) {
+            return "Rs. " + Number(amount).toLocaleString('en-PK');
+        }
+
+        function addNotification(text) {
+            state.notifications.unshift({
+                id: Date.now(),
+                text: text,
+                time: "Just now",
+                read: false
+            });
+            saveState();
+        }
+
+        function resetDemoData() {
+            state.transactions = JSON.parse(JSON.stringify(initialTransactions));
+            state.users = JSON.parse(JSON.stringify(initialUsers));
+            state.notifications = JSON.parse(JSON.stringify(initialNotifications));
+            state.currentUser = null;
+            saveState();
+            render();
+            showToast("Demo environment reset to initial test state!", "success");
+        }
+
+        // ==========================================
+        // 5. TOAST NOTIFICATION SYSTEM
+        // ==========================================
+        function showToast(message, type = 'success') {
+            const existing = document.getElementById('toast-container');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.id = 'toast-container';
+            toast.className = `fixed bottom-5 right-5 z-50 px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 text-sm font-medium transition-all duration-300 transform translate-y-0 ${
+                type === 'success' ? 'bg-acidlime text-obsidian border border-lime-400' : 'bg-hotorange text-offwhite'
+            }`;
+            toast.innerHTML = `
+                <i data-lucide="${type === 'success' ? 'check-circle-2' : 'alert-circle'}" class="w-5 h-5 flex-shrink-0"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(toast);
+            lucide.createIcons();
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // ==========================================
+        // 6. RENDER ENGINE & ROUTING
+        // ==========================================
+        function render() {
+            const app = document.getElementById('app');
+            const htmlTag = document.documentElement;
+
+            if (state.theme === 'dark') {
+                htmlTag.classList.add('dark');
+                htmlTag.classList.remove('light');
+            } else {
+                htmlTag.classList.remove('dark');
+                htmlTag.classList.add('light');
+            }
+
+            if (state.lang === 'ur') {
+                htmlTag.setAttribute('dir', 'rtl');
+                htmlTag.classList.add('urdu-font');
+            } else {
+                htmlTag.setAttribute('dir', 'ltr');
+                htmlTag.classList.remove('urdu-font');
+            }
+
+            if (!state.currentUser) {
+                app.innerHTML = renderAuthScreen();
+            } else {
+                app.innerHTML = renderDashboardContainer();
+            }
+
+            lucide.createIcons();
+        }
+
+        // ==========================================
+        // 7. AUTHENTICATION & LOGIN UI
+        // ==========================================
+        function renderAuthScreen() {
+            return `
+                <div class="min-h-screen flex flex-col justify-center items-center px-4 py-12 bg-obsidian text-offwhite dark:bg-obsidian dark:text-offwhite bg-[#F5F2EA] text-[#0B0B0D]">
+                    <div class="mb-8 text-center">
+                        <img src="${state.theme === 'dark' ? LOGO_LIGHT : LOGO_DARK}" alt="BindPay" class="h-12 mx-auto mb-3 object-contain">
+                        <p class="text-sm font-medium text-softgray tracking-wider uppercase">${t('tagline')}</p>
+                    </div>
+
+                    <div class="w-full max-w-md bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-8 shadow-2xl">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-2xl font-bold tracking-tight">${state.modalState === 'register' ? t('createAccount') : t('login')}</h2>
+                            <div class="flex space-x-2">
+                                <button onclick="toggleLang()" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-borderdark text-offwhite hover:bg-zinc-700">
+                                    ${state.lang === 'en' ? 'اردو' : 'English'}
+                                </button>
+                                <button onclick="toggleTheme()" class="p-1.5 rounded-lg bg-borderdark text-acidlime hover:bg-zinc-700">
+                                    <i data-lucide="${state.theme === 'dark' ? 'sun' : 'moon'}" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <form onsubmit="handleAuthSubmit(event)" class="space-y-4">
+                            ${state.modalState === 'register' ? `
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">${t('fullName')}</label>
+                                    <input type="text" id="regName" required placeholder="e.g. Usman Tariq" class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite focus:border-acidlime outline-none text-sm">
+                                </div>
+                            ` : ''}
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">${t('email')}</label>
+                                <input type="email" id="authEmail" required placeholder="name@bindpay.app" class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite focus:border-acidlime outline-none text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">${t('password')}</label>
+                                <div class="relative">
+                                    <input type="password" id="authPassword" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite focus:border-acidlime outline-none text-sm">
+                                    <button type="button" onclick="const p = document.getElementById('authPassword'); p.type = p.type === 'password' ? 'text' : 'password';" class="absolute right-3 top-3.5 text-softgray hover:text-offwhite">
+                                        <i data-lucide="eye" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            ${state.modalState === 'register' ? `
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">${t('role')}</label>
+                                    <select id="regRole" class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite focus:border-acidlime outline-none text-sm">
+                                        <option value="buyer">${t('buyer')}</option>
+                                        <option value="seller">${t('seller')}</option>
+                                    </select>
+                                </div>
+                            ` : ''}
+
+                            <button type="submit" class="w-full py-3.5 px-4 bg-acidlime text-obsidian font-bold rounded-xl hover:bg-lime-400 transition-colors shadow-lg shadow-acidlime/20 text-sm">
+                                ${state.modalState === 'register' ? t('registerBtn') : t('loginBtn')}
+                            </button>
+                        </form>
+
+                        <div class="mt-6 pt-6 border-t border-borderdark text-center">
+                            <button onclick="state.modalState = state.modalState === 'register' ? null : 'register'; render();" class="text-xs text-softgray hover:text-acidlime transition-colors">
+                                ${state.modalState === 'register' ? t('alreadyHaveAcc') : t('createAccount')}
+                            </button>
+                        </div>
+
+                        <div class="mt-6 p-4 rounded-xl bg-obsidian/60 border border-borderdark text-xs space-y-2">
+                            <div class="font-bold text-acidlime flex items-center space-x-1.5">
+                                <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+                                <span>${t('demoAccounts')}</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 pt-1">
+                                <button onclick="fillLogin('buyer@bindpay.app', 'buyer123')" class="p-2 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-left">
+                                    <div class="font-semibold text-offwhite">Buyer Demo</div>
+                                    <div class="text-[10px] text-softgray">buyer@bindpay.app</div>
+                                </button>
+                                <button onclick="fillLogin('seller@bindpay.app', 'seller123')" class="p-2 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-left">
+                                    <div class="font-semibold text-offwhite">Seller Demo</div>
+                                    <div class="text-[10px] text-softgray">seller@bindpay.app</div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 text-center text-xs text-softgray">
+                        <p>BindPay Pakistan Pilot Testing Environment v2.5 • Secure Escrow Protection</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function fillLogin(email, pass) {
+            document.getElementById('authEmail').value = email;
+            document.getElementById('authPassword').value = pass;
+        }
+
+        function handleAuthSubmit(event) {
+            event.preventDefault();
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value.trim();
+
+            if (state.modalState === 'register') {
+                const name = document.getElementById('regName').value.trim();
+                const role = document.getElementById('regRole').value;
+                if (state.users.some(u => u.email === email)) {
+                    showToast("User account with this email already exists!", "error");
+                    return;
+                }
+                const newUser = { email, password, name, role };
+                state.users.push(newUser);
+                state.currentUser = newUser;
+                state.modalState = null;
+                saveState();
+                render();
+                showToast(`Welcome to BindPay, ${name}! Account created successfully.`);
+            } else {
+                const user = state.users.find(u => u.email === email && u.password === password);
+                if (user) {
+                    state.currentUser = user;
+                    saveState();
+                    render();
+                    showToast(`Logged in successfully as ${user.name} (${user.role.toUpperCase()})`);
+                } else {
+                    showToast("Invalid email or password. Try demo accounts.", "error");
+                }
+            }
+        }
+
+        // ==========================================
+        // 8. MAIN DASHBOARD CONTAINER & SIDEBAR
+        // ==========================================
+        function renderDashboardContainer() {
+            const role = state.currentUser.role;
+            return `
+                <div class="flex-1 flex flex-col md:flex-row bg-obsidian text-offwhite dark:bg-obsidian dark:text-offwhite bg-[#F5F2EA] text-[#0B0B0D]">
+                    <aside class="w-full md:w-64 bg-carddark dark:bg-carddark bg-white border-r border-borderdark dark:border-borderdark border-borderlight flex flex-col justify-between p-6">
+                        <div>
+                            <div class="flex items-center justify-between mb-8">
+                                <img src="${state.theme === 'dark' ? LOGO_LIGHT : LOGO_DARK}" alt="BindPay" class="h-8 object-contain">
+                                <div class="flex items-center space-x-1">
+                                    <button onclick="toggleLang()" class="p-1.5 rounded-lg bg-zinc-800 text-offwhite text-xs font-bold" title="Switch Language">
+                                        ${state.lang.toUpperCase()}
+                                    </button>
+                                    <button onclick="toggleTheme()" class="p-1.5 rounded-lg bg-zinc-800 text-acidlime">
+                                        <i data-lucide="${state.theme === 'dark' ? 'sun' : 'moon'}" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mb-6 p-3 rounded-xl bg-obsidian/40 border border-borderdark flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full bg-acidlime text-obsidian font-bold flex items-center justify-center text-sm flex-shrink-0">
+                                    ${state.currentUser.name.charAt(0)}
+                                </div>
+                                <div class="overflow-hidden">
+                                    <div class="font-semibold text-sm truncate">${state.currentUser.name}</div>
+                                    <div class="text-[11px] text-acidlime font-mono uppercase tracking-wider">${role}</div>
+                                </div>
+                            </div>
+
+                            <nav class="space-y-1.5">
+                                <button onclick="state.activeTab='overview'; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='overview' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                                    <span>${t('overview')}</span>
+                                </button>
+
+                                ${role === 'buyer' ? `
+                                    <button onclick="state.activeTab='create'; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='create' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                                        <span>${t('createDeal')}</span>
+                                    </button>
+                                ` : ''}
+
+                                <button onclick="state.activeTab='deals'; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='deals' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                    <i data-lucide="briefcase" class="w-4 h-4"></i>
+                                    <span>${t('myDeals')}</span>
+                                </button>
+
+                                ${role === 'seller' ? `
+                                    <button onclick="state.activeTab='earnings'; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='earnings' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                        <i data-lucide="wallet" class="w-4 h-4"></i>
+                                        <span>${t('earnings')}</span>
+                                    </button>
+                                ` : ''}
+
+                                <button onclick="state.activeTab='disputes'; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='disputes' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                    <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                                    <span>${t('disputes')}</span>
+                                </button>
+
+                                <button onclick="state.activeTab='guide'; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='guide' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                    <i data-lucide="help-circle" class="w-4 h-4"></i>
+                                    <span>${t('demoGuide')}</span>
+                                </button>
+
+                                <button onclick="state.activeTab='admin'; render();" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${state.activeTab==='admin' ? 'bg-acidlime text-obsidian font-bold' : 'text-softgray hover:bg-zinc-800 hover:text-offwhite'}">
+                                    <i data-lucide="settings" class="w-4 h-4"></i>
+                                    <span>${t('demoAdmin')}</span>
+                                </button>
+                            </nav>
+                        </div>
+
+                        <div class="space-y-3 pt-6 border-t border-borderdark">
+                            <button onclick="resetDemoData()" class="w-full py-2.5 px-3 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs font-semibold flex items-center justify-center space-x-2">
+                                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                                <span>${t('resetData')}</span>
+                            </button>
+                            <button onclick="logout()" class="w-full py-2.5 px-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold flex items-center justify-center space-x-2 text-softgray hover:text-offwhite">
+                                <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                                <span>${t('logout')}</span>
+                            </button>
+                        </div>
+                    </aside>
+
+                    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+                        <header class="h-16 px-8 border-b border-borderdark flex items-center justify-between bg-carddark/50 backdrop-blur sticky top-0 z-30">
+                            <div class="flex items-center space-x-4">
+                                <h1 class="text-lg font-bold capitalize tracking-tight">${t(state.activeTab)}</h1>
+                                <span class="px-2.5 py-1 rounded-full text-xs font-mono bg-acidlime/10 text-acidlime border border-acidlime/20">
+                                    Karachi Pilot MVP
+                                </span>
+                            </div>
+
+                            <div class="flex items-center space-x-4">
+                                <div class="relative">
+                                    <button onclick="toggleNotifications()" class="p-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-softgray hover:text-offwhite relative">
+                                        <i data-lucide="bell" class="w-5 h-5"></i>
+                                        ${state.notifications.filter(n => !n.read).length > 0 ? `
+                                            <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-hotorange rounded-full"></span>
+                                        ` : ''}
+                                    </button>
+                                </div>
+                            </div>
+                        </header>
+
+                        <div class="p-8 max-w-7xl w-full mx-auto flex-1">
+                            ${renderActiveTabContent()}
+                        </div>
+                    </main>
+                </div>
+            `;
+        }
+
+        function logout() {
+            state.currentUser = null;
+            saveState();
+            render();
+            showToast("Logged out successfully.");
+        }
+
+        function toggleLang() {
+            state.lang = state.lang === 'en' ? 'ur' : 'en';
+            saveState();
+            render();
+        }
+
+        function toggleTheme() {
+            state.theme = state.theme === 'dark' ? 'light' : 'dark';
+            saveState();
+            render();
+        }
+
+        function toggleNotifications() {
+            state.notifications = state.notifications.map(n => ({ ...n, read: true }));
+            saveState();
+            showToast("Notifications marked as read.");
+        }
+
+        // ==========================================
+        // 9. ACTIVE TAB ROUTER & VIEWS
+        // ==========================================
+        function renderActiveTabContent() {
+            switch(state.activeTab) {
+                case 'overview': return renderOverviewTab();
+                case 'deals': return renderDealsTab();
+                case 'create': return renderCreateDealTab();
+                case 'earnings': return renderEarningsTab();
+                case 'disputes': return renderDisputesTab();
+                case 'guide': return renderDemoGuideTab();
+                case 'admin': return renderAdminTab();
+                default: return renderOverviewTab();
+            }
+        }
+
+        // --- OVERVIEW TAB ---
+        function renderOverviewTab() {
+            const role = state.currentUser.role;
+            const myTxs = state.transactions.filter(tx => role === 'seller' ? tx.sellerEmail === state.currentUser.email : tx.buyerEmail === state.currentUser.email);
+
+            const totalDeals = myTxs.length;
+            const activeDeals = myTxs.filter(tx => ['Accepted', 'Payment Received', 'Shipped / Dispatched'].includes(tx.status)).length;
+            const completedDeals = myTxs.filter(tx => tx.status === 'Completed').length;
+            const pendingDeals = myTxs.filter(tx => tx.status === 'Proposed').length;
+
+            let totalEarnings = 0;
+            let availableEarnings = 0;
+            let earningsOnHold = 0;
+            let disputedAmount = 0;
+            let paymentsMade = 0;
+            let paymentsOnHold = 0;
+
+            myTxs.forEach(tx => {
+                if (role === 'seller') {
+                    if (tx.status === 'Completed') {
+                        totalEarnings += tx.amount;
+                        availableEarnings += tx.amount;
+                    }
+                    if (['Payment Received', 'Shipped / Dispatched'].includes(tx.status)) earningsOnHold += tx.amount;
+                    if (tx.status === 'Disputed') disputedAmount += tx.amount;
+                } else {
+                    if (['Payment Received', 'Shipped / Dispatched', 'Completed'].includes(tx.status)) paymentsMade += tx.amount;
+                    if (['Payment Received', 'Shipped / Dispatched'].includes(tx.status)) paymentsOnHold += tx.amount;
+                    if (tx.status === 'Disputed') disputedAmount += tx.amount;
+                }
+            });
+
+            return `
+                <div class="space-y-8">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
+                            <div class="flex items-center justify-between text-softgray mb-3">
+                                <span class="text-xs uppercase font-semibold">${t('totalDeals')}</span>
+                                <i data-lucide="briefcase" class="w-5 h-5 text-acidlime"></i>
+                            </div>
+                            <div class="text-3xl font-extrabold">${totalDeals}</div>
+                            <div class="mt-2 text-xs text-softgray">${pendingDeals} Proposed, ${activeDeals} Active</div>
+                        </div>
+
+                        <div class="p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
+                            <div class="flex items-center justify-between text-softgray mb-3">
+                                <span class="text-xs uppercase font-semibold">${role === 'seller' ? t('totalEarnings') : 'Payments Made'}</span>
+                                <i data-lucide="wallet" class="w-5 h-5 text-electricpurple"></i>
+                            </div>
+                            <div class="text-3xl font-extrabold">${formatPKR(role === 'seller' ? totalEarnings : paymentsMade)}</div>
+                            <div class="mt-2 text-xs text-softgray">Secure Escrow Settlement</div>
+                        </div>
+
+                        <div class="p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
+                            <div class="flex items-center justify-between text-softgray mb-3">
+                                <span class="text-xs uppercase font-semibold">${role === 'seller' ? t('earningsOnHold') : 'Payments on Hold'}</span>
+                                <i data-lucide="lock" class="w-5 h-5 text-hotorange"></i>
+                            </div>
+                            <div class="text-3xl font-extrabold">${formatPKR(role === 'seller' ? earningsOnHold : paymentsOnHold)}</div>
+                            <div class="mt-2 text-xs text-softgray">Protected in Escrow Vault</div>
+                        </div>
+
+                        <div class="p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
+                            <div class="flex items-center justify-between text-softgray mb-3">
+                                <span class="text-xs uppercase font-semibold">${t('disputedAmount')}</span>
+                                <i data-lucide="alert-triangle" class="w-5 h-5 text-red-400"></i>
+                            </div>
+                            <div class="text-3xl font-extrabold">${formatPKR(disputedAmount)}</div>
+                            <div class="mt-2 text-xs text-softgray">Under Mediation Review</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 shadow-lg">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold tracking-tight">Recent Transactions</h3>
+                            <button onclick="state.activeTab='deals'; render();" class="text-xs font-semibold text-acidlime hover:underline">View All</button>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead class="border-b border-borderdark text-xs uppercase text-softgray">
+                                    <tr>
+                                        <th class="pb-3">ID</th>
+                                        <th class="pb-3">${t('dealTitle')}</th>
+                                        <th class="pb-3">${role === 'seller' ? 'Buyer' : 'Seller'}</th>
+                                        <th class="pb-3">${t('amount')}</th>
+                                        <th class="pb-3">${t('status')}</th>
+                                        <th class="pb-3 text-right">${t('action')}</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-borderdark">
+                                    ${myTxs.slice(0, 5).map(tx => `
+                                        <tr class="hover:bg-zinc-800/40">
+                                            <td class="py-4 font-mono text-xs text-acidlime">${tx.id}</td>
+                                            <td class="py-4 font-medium">${tx.title}</td>
+                                            <td class="py-4 text-softgray">${role === 'seller' ? tx.buyerName : tx.sellerName}</td>
+                                            <td class="py-4 font-bold">${formatPKR(tx.amount)}</td>
+                                            <td class="py-4">
+                                                <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${getStatusBadgeClass(tx.status)}">${tx.status}</span>
+                                            </td>
+                                            <td class="py-4 text-right">
+                                                <button onclick="openTxDetails('${tx.id}')" class="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold">
+                                                    ${t('viewDetails')}
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                    ${myTxs.length === 0 ? `<tr><td colspan="6" class="text-center py-8 text-softgray">No transactions found.</td></tr>` : ''}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getStatusBadgeClass(status) {
+            switch(status) {
+                case 'Completed': return 'bg-acidlime/10 text-acidlime border border-acidlime/20';
+                case 'Payment Received': return 'bg-electricpurple/10 text-electricpurple border border-electricpurple/20';
+                case 'Shipped / Dispatched': return 'bg-blue-500/10 text-blue-400 border border-blue-500/20';
+                case 'Disputed': return 'bg-red-500/10 text-red-400 border border-red-500/20';
+                case 'Rejected': return 'bg-zinc-700 text-softgray';
+                case 'Proposed': return 'bg-hotorange/10 text-hotorange border border-hotorange/20';
+                default: return 'bg-acidlime/10 text-acidlime';
+            }
+        }
+
+        // --- CREATE DEAL PROPOSAL TAB (BUYER) ---
+        function renderCreateDealTab() {
+            const randomId = "BP-" + Math.floor(10000 + Math.random() * 90000);
+            return `
+                <div class="max-w-2xl mx-auto bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-8 shadow-2xl">
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold tracking-tight">Create & Send Deal Proposal</h2>
+                        <p class="text-xs text-softgray mt-1">As a Buyer, propose transaction terms and send them directly to the Seller for review and acceptance.</p>
+                    </div>
+
+                    <form onsubmit="handleCreateDeal(event)" class="space-y-5">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">Transaction ID</label>
+                                <input type="text" id="newTxId" value="${randomId}" readonly class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-acidlime font-mono text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">${t('amount')} (PKR)</label>
+                                <input type="number" id="newAmount" required placeholder="50000" class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite focus:border-acidlime outline-none text-sm">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">${t('dealTitle')}</label>
+                            <input type="text" id="newTitle" required placeholder="e.g. Custom Web Development Service" class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite focus:border-acidlime outline-none text-sm">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">${t('sellerEmail')}</label>
+                                <input type="email" id="newSellerEmail" required value="seller@bindpay.app" class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite focus:border-acidlime outline-none text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">${t('deliveryMethod')}</label>
+                                <select id="newDeliveryMethod" class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite focus:border-acidlime outline-none text-sm">
+                                    <option value="TCS Courier">TCS Courier</option>
+                                    <option value="Leopard Courier">Leopard Courier</option>
+                                    <option value="Daewoo Cargo">Daewoo Cargo</option>
+                                    <option value="Digital / Cloud Delivery">Digital / Cloud Delivery</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">${t('expectedDelivery')}</label>
+                                <input type="date" id="newDate" required class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite focus:border-acidlime outline-none text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">Seller Business Name</label>
+                                <input type="text" id="newSellerName" required value="Ahmad Electronics PK" class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite focus:border-acidlime outline-none text-sm">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">${t('description')}</label>
+                            <textarea id="newDesc" rows="3" required placeholder="Detailed specifications of product or service..." class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite focus:border-acidlime outline-none text-sm"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">${t('terms')}</label>
+                            <textarea id="newTerms" rows="2" required placeholder="Escrow release conditions and terms..." class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite focus:border-acidlime outline-none text-sm">100% Escrow hold until verified delivery and inspection.</textarea>
+                        </div>
+
+                        <button type="submit" class="w-full py-4 px-4 bg-acidlime text-obsidian font-bold rounded-xl hover:bg-lime-400 transition-colors shadow-lg shadow-acidlime/20 text-sm">
+                            ${t('sendDealProposal')}
+                        </button>
+                    </form>
+                </div>
+            `;
+        }
+
+        function handleCreateDeal(event) {
+            event.preventDefault();
+            const newTx = {
+                id: document.getElementById('newTxId').value,
+                title: document.getElementById('newTitle').value,
+                sellerEmail: document.getElementById('newSellerEmail').value.trim(),
+                sellerName: document.getElementById('newSellerName').value,
+                buyerEmail: state.currentUser.email,
+                buyerName: state.currentUser.name,
+                amount: Number(document.getElementById('newAmount').value),
+                deliveryMethod: document.getElementById('newDeliveryMethod').value,
+                expectedDate: document.getElementById('newDate').value || "2026-03-30",
+                terms: document.getElementById('newTerms').value,
+                notes: "Proposed by buyer via BindPay secure portal.",
+                status: "Proposed",
+                shippingStage: "Preparing Order",
+                createdAt: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                paymentRef: null,
+                paymentMethod: null,
+                timeline: [
+                    { time: new Date().toISOString().replace('T', ' ').substring(0, 16), event: `Deal proposal created by buyer ${state.currentUser.name} and sent to seller.` }
+                ],
+                dispute: null
+            };
+
+            state.transactions.unshift(newTx);
+            addNotification(`New deal proposal ${newTx.id} sent to seller.`);
+            saveState();
+            state.activeTab = 'deals';
+            render();
+            showToast(`Deal proposal ${newTx.id} successfully sent to seller!`);
+        }
+
+        // --- DEALS / TRANSACTIONS TAB ---
+        function renderDealsTab() {
+            const role = state.currentUser.role;
+            const myTxs = state.transactions.filter(tx => role === 'seller' ? tx.sellerEmail === state.currentUser.email : tx.buyerEmail === state.currentUser.email);
+
+            const filteredTxs = myTxs.filter(tx => {
+                const matchesSearch = tx.id.toLowerCase().includes(state.searchQuery.toLowerCase()) || tx.title.toLowerCase().includes(state.searchQuery.toLowerCase());
+                const matchesStatus = state.filterStatus === 'all' || tx.status === state.filterStatus;
+                return matchesSearch && matchesStatus;
+            });
+
+            return `
+                <div class="space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight p-4 rounded-2xl shadow-lg">
+                        <div class="w-full sm:w-80 relative">
+                            <i data-lucide="search" class="w-4 h-4 text-softgray absolute left-3.5 top-3.5"></i>
+                            <input type="text" oninput="state.searchQuery=this.value; render();" value="${state.searchQuery}" placeholder="${t('searchPlaceholder')}" class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-obsidian border border-borderdark text-offwhite text-sm outline-none focus:border-acidlime">
+                        </div>
+
+                        <div class="flex items-center space-x-3 w-full sm:w-auto">
+                            <select onchange="state.filterStatus=this.value; render();" class="px-4 py-2.5 rounded-xl bg-obsidian border border-borderdark text-offwhite text-sm outline-none focus:border-acidlime">
+                                <option value="all">${t('filterAll')}</option>
+                                <option value="Proposed">Proposed</option>
+                                <option value="Accepted">Accepted</option>
+                                <option value="Payment Received">Payment Received</option>
+                                <option value="Shipped / Dispatched">Shipped</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Disputed">Disputed</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 shadow-lg overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="border-b border-borderdark text-xs uppercase text-softgray">
+                                <tr>
+                                    <th class="pb-3">ID</th>
+                                    <th class="pb-3">${t('dealTitle')}</th>
+                                    <th class="pb-3">${role === 'seller' ? 'Buyer' : 'Seller'}</th>
+                                    <th class="pb-3">${t('amount')}</th>
+                                    <th class="pb-3">${t('status')}</th>
+                                    <th class="pb-3 text-right">${t('action')}</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-borderdark">
+                                ${filteredTxs.map(tx => `
+                                    <tr class="hover:bg-zinc-800/40">
+                                        <td class="py-4 font-mono text-xs text-acidlime">${tx.id}</td>
+                                        <td class="py-4 font-medium">${tx.title}</td>
+                                        <td class="py-4 text-softgray">${role === 'seller' ? tx.buyerName : tx.sellerName}</td>
+                                        <td class="py-4 font-bold">${formatPKR(tx.amount)}</td>
+                                        <td class="py-4">
+                                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${getStatusBadgeClass(tx.status)}">${tx.status}</span>
+                                        </td>
+                                        <td class="py-4 text-right">
+                                            <button onclick="openTxDetails('${tx.id}')" class="px-3.5 py-1.5 rounded-lg bg-acidlime text-obsidian font-bold text-xs hover:bg-lime-400">
+                                                ${t('viewDetails')}
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                                ${filteredTxs.length === 0 ? `<tr><td colspan="6" class="text-center py-12 text-softgray">No deals found matching criteria.</td></tr>` : ''}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- EARNINGS & PAYOUTS TAB (SELLER) ---
+        function renderEarningsTab() {
+            const myTxs = state.transactions.filter(tx => tx.sellerEmail === state.currentUser.email);
+            let totalEarnings = 0;
+            let availableEarnings = 0;
+            let earningsOnHold = 0;
+            let disputedAmount = 0;
+
+            myTxs.forEach(tx => {
+                if (tx.status === 'Completed') {
+                    totalEarnings += tx.amount;
+                    availableEarnings += tx.amount;
+                }
+                if (['Payment Received', 'Shipped / Dispatched'].includes(tx.status)) {
+                    earningsOnHold += tx.amount;
+                }
+                if (tx.status === 'Disputed') {
+                    disputedAmount += tx.amount;
+                }
+            });
+
+            return `
+                <div class="space-y-8">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
+                            <div class="text-xs uppercase font-semibold text-softgray mb-2">Total Earnings</div>
+                            <div class="text-3xl font-extrabold text-acidlime">${formatPKR(totalEarnings)}</div>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
+                            <div class="text-xs uppercase font-semibold text-softgray mb-2">Available Balance</div>
+                            <div class="text-3xl font-extrabold">${formatPKR(availableEarnings)}</div>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
+                            <div class="text-xs uppercase font-semibold text-softgray mb-2">Escrow on Hold</div>
+                            <div class="text-3xl font-extrabold text-hotorange">${formatPKR(earningsOnHold)}</div>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight shadow-lg">
+                            <div class="text-xs uppercase font-semibold text-softgray mb-2">Disputed Escrow</div>
+                            <div class="text-3xl font-extrabold text-red-400">${formatPKR(disputedAmount)}</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 shadow-lg">
+                        <h3 class="text-lg font-bold tracking-tight mb-4">Earnings Settlement History</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead class="border-b border-borderdark text-xs uppercase text-softgray">
+                                    <tr>
+                                        <th class="pb-3">Transaction ID</th>
+                                        <th class="pb-3">${t('dealTitle')}</th>
+                                        <th class="pb-3">${t('amount')}</th>
+                                        <th class="pb-3">Settlement Status</th>
+                                        <th class="pb-3 text-right">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-borderdark">
+                                    ${myTxs.filter(tx => ['Completed', 'Payment Received', 'Shipped / Dispatched', 'Disputed'].includes(tx.status)).map(tx => `
+                                        <tr class="hover:bg-zinc-800/40">
+                                            <td class="py-4 font-mono text-xs text-acidlime">${tx.id}</td>
+                                            <td class="py-4 font-medium">${tx.title}</td>
+                                            <td class="py-4 font-bold">${formatPKR(tx.amount)}</td>
+                                            <td class="py-4">
+                                                <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${tx.status === 'Completed' ? 'bg-acidlime/10 text-acidlime' : 'bg-hotorange/10 text-hotorange'}">
+                                                    ${tx.status === 'Completed' ? 'Released to Available' : 'Escrow Secured'}
+                                                </span>
+                                            </td>
+                                            <td class="py-4 text-right text-softgray text-xs">${tx.createdAt}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- DISPUTES TAB ---
+        function renderDisputesTab() {
+            const role = state.currentUser.role;
+            const myTxs = state.transactions.filter(tx => (role === 'seller' ? tx.sellerEmail === state.currentUser.email : tx.buyerEmail === state.currentUser.email) && tx.dispute);
+
+            return `
+                <div class="space-y-6">
+                    <div class="bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 shadow-lg">
+                        <h3 class="text-lg font-bold tracking-tight mb-4">Active & Resolved Disputes</h3>
+                        <div class="space-y-4">
+                            ${myTxs.map(tx => `
+                                <div class="p-5 rounded-xl bg-obsidian border border-borderdark flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                    <div>
+                                        <div class="flex items-center space-x-3 mb-1">
+                                            <span class="text-xs font-mono text-acidlime">${tx.id}</span>
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400 border border-red-500/20">${tx.dispute.reason}</span>
+                                        </div>
+                                        <div class="font-bold text-base mb-1">${tx.title}</div>
+                                        <p class="text-xs text-softgray max-w-xl">${tx.dispute.description}</p>
+                                    </div>
+                                    <button onclick="openTxDetails('${tx.id}')" class="px-4 py-2 bg-acidlime text-obsidian font-bold rounded-xl text-xs hover:bg-lime-400 whitespace-nowrap">
+                                        View Dispute & Timeline
+                                    </button>
+                                </div>
+                            `).join('')}
+                            ${myTxs.length === 0 ? `<div class="text-center py-12 text-softgray">No active disputes found. All transactions proceeding smoothly.</div>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- DEMO GUIDE TAB ---
+        function renderDemoGuideTab() {
+            return `
+                <div class="max-w-3xl mx-auto space-y-8 bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-8 shadow-2xl">
+                    <div>
+                        <h2 class="text-2xl font-bold tracking-tight mb-2">BindPay Karachi Pilot Testing Guide</h2>
+                        <p class="text-sm text-softgray">Follow this correct step-by-step walkthrough reflecting buyer-initiated proposals and secure escrow mechanics.</p>
+                    </div>
+
+                    <div class="space-y-6 text-sm">
+                        <div class="p-4 rounded-xl bg-obsidian border border-borderdark space-y-2">
+                            <div class="font-bold text-acidlime flex items-center space-x-2">
+                                <span class="w-6 h-6 rounded-full bg-acidlime/20 flex items-center justify-center text-xs">1</span>
+                                <span>Step 1: Buyer Creates Deal Proposal</span>
+                            </div>
+                            <p class="text-softgray pl-8">Log in as Buyer (<code class="text-acidlime">buyer@bindpay.app</code>), navigate to "Create Deal Proposal", specify Seller Email (<code class="text-acidlime">seller@bindpay.app</code>), amount in PKR, and dispatch the proposal.</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-obsidian border border-borderdark space-y-2">
+                            <div class="font-bold text-acidlime flex items-center space-x-2">
+                                <span class="w-6 h-6 rounded-full bg-acidlime/20 flex items-center justify-center text-xs">2</span>
+                                <span>Step 2: Seller Accepts & Buyer Pays</span>
+                            </div>
+                            <p class="text-softgray pl-8">Log out and log in as Seller (<code class="text-acidlime">seller@bindpay.app</code>). Go to "My Deals", view the proposal, and click <strong class="text-offwhite">Accept Deal</strong>. Then log back in as Buyer to complete the simulated payment via Bank Transfer, JazzCash, Easypaisa, or Demo Balance.</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-obsidian border border-borderdark space-y-2">
+                            <div class="font-bold text-acidlime flex items-center space-x-2">
+                                <span class="w-6 h-6 rounded-full bg-acidlime/20 flex items-center justify-center text-xs">3</span>
+                                <span>Step 3: Seller Updates Delivery Progress</span>
+                            </div>
+                            <p class="text-softgray pl-8">As Seller, once funds show as "Payment Received / On Hold", update delivery progress through Preparing Order -> Ready for Dispatch -> Shipped -> Delivered.</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-obsidian border border-borderdark space-y-2">
+                            <div class="font-bold text-acidlime flex items-center space-x-2">
+                                <span class="w-6 h-6 rounded-full bg-acidlime/20 flex items-center justify-center text-xs">4</span>
+                                <span>Step 4: Buyer Confirms Delivery or Raises Dispute</span>
+                            </div>
+                            <p class="text-softgray pl-8">As Buyer, once marked delivered, either Confirm Delivery (releasing funds to Seller available balance) or Raise a Dispute to freeze funds for mediation.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- DEMO ADMIN RESOLUTION PANEL ---
+        function renderAdminTab() {
+            const disputes = state.transactions.filter(tx => tx.dispute);
+            return `
+                <div class="space-y-6 max-w-4xl mx-auto">
+                    <div class="bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 shadow-lg">
+                        <h2 class="text-xl font-bold tracking-tight mb-2">Demo Admin & Dispute Resolution Panel</h2>
+                        <p class="text-xs text-softgray mb-6">Simulate incubator / platform arbiter resolution for active escrow disputes.</p>
+
+                        <div class="space-y-4">
+                            ${disputes.map(tx => `
+                                <div class="p-5 rounded-xl bg-obsidian border border-borderdark space-y-4">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex items-center space-x-3">
+                                            <span class="font-mono text-xs text-acidlime">${tx.id}</span>
+                                            <span class="font-bold">${tx.title}</span>
+                                        </div>
+                                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-red-500/10 text-red-400">${formatPKR(tx.amount)}</span>
+                                    </div>
+                                    <div class="text-xs text-softgray">
+                                        Reason: <strong class="text-offwhite">${tx.dispute.reason}</strong> — ${tx.dispute.description}
+                                    </div>
+                                    <div class="flex flex-wrap gap-3 pt-2 border-t border-borderdark">
+                                        <button onclick="resolveDispute('${tx.id}', 'buyer')" class="px-4 py-2 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-semibold hover:bg-blue-500/20">
+                                            Resolve in Buyer's Favour (Refund)
+                                        </button>
+                                        <button onclick="resolveDispute('${tx.id}', 'seller')" class="px-4 py-2 rounded-xl bg-acidlime/10 text-acidlime border border-acidlime/20 text-xs font-semibold hover:bg-acidlime/20">
+                                            Resolve in Seller's Favour (Release Funds)
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                            ${disputes.length === 0 ? `<div class="text-center py-12 text-softgray">No disputed transactions pending admin mediation.</div>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function resolveDispute(txId, favour) {
+            const tx = state.transactions.find(t => t.id === txId);
+            if (!tx) return;
+            tx.status = favour === 'buyer' ? 'Rejected' : 'Completed';
+            tx.shippingStage = favour === 'buyer' ? 'Preparing Order' : 'Delivered';
+            tx.dispute = null;
+            tx.timeline.push({
+                time: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                event: `Admin resolved dispute in favour of ${favour.toUpperCase()}. Status updated to ${tx.status}.`
+            });
+            addNotification(`Dispute for ${txId} resolved by admin in favour of ${favour}.`);
+            saveState();
+            render();
+            showToast(`Transaction ${txId} successfully resolved!`);
+        }
+
+        // ==========================================
+        // 10. TRANSACTION DETAILS & MODAL DIALOGS
+        // ==========================================
+        function openTxDetails(txId) {
+            state.selectedTxId = txId;
+            state.modalState = 'details';
+            renderModal();
+        }
+
+        function closeModal() {
+            state.modalState = null;
+            const modal = document.getElementById('global-modal');
+            if (modal) modal.remove();
+        }
+
+        function renderModal() {
+            const existing = document.getElementById('global-modal');
+            if (existing) existing.remove();
+
+            if (!state.modalState) return;
+
+            const tx = state.transactions.find(t => t.id === state.selectedTxId);
+            if (!tx) return;
+
+            const role = state.currentUser.role;
+            const isBuyer = role === 'buyer';
+
+            const modalEl = document.createElement('div');
+            modalEl.id = 'global-modal';
+            modalEl.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-obsidian/80 backdrop-blur-sm overflow-y-auto';
+
+            modalEl.innerHTML = `
+                <div class="w-full max-w-2xl bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 shadow-2xl space-y-6 my-8">
+                    <div class="flex justify-between items-center border-b border-borderdark pb-4">
+                        <div>
+                            <span class="text-xs font-mono text-acidlime">${tx.id}</span>
+                            <h3 class="text-lg font-bold">${tx.title}</h3>
+                        </div>
+                        <button onclick="closeModal()" class="p-2 rounded-xl bg-zinc-800 text-softgray hover:text-offwhite">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="p-3 rounded-xl bg-obsidian border border-borderdark">
+                            <div class="text-xs text-softgray">Seller</div>
+                            <div class="font-semibold">${tx.sellerName}</div>
+                            <div class="text-[11px] text-softgray">${tx.sellerEmail}</div>
+                        </div>
+                        <div class="p-3 rounded-xl bg-obsidian border border-borderdark">
+                            <div class="text-xs text-softgray">Buyer</div>
+                            <div class="font-semibold">${tx.buyerName}</div>
+                            <div class="text-[11px] text-softgray">${tx.buyerEmail}</div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between p-3 rounded-xl bg-obsidian border border-borderdark">
+                            <span class="text-softgray">Deal Amount</span>
+                            <span class="font-extrabold text-acidlime">${formatPKR(tx.amount)}</span>
+                        </div>
+                        <div class="flex justify-between p-3 rounded-xl bg-obsidian border border-borderdark">
+                            <span class="text-softgray">Current Status</span>
+                            <span class="font-semibold px-2.5 py-0.5 rounded-full text-xs ${getStatusBadgeClass(tx.status)}">${tx.status}</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-obsidian border border-borderdark space-y-1">
+                            <span class="text-xs text-softgray uppercase">Terms & Conditions</span>
+                            <p class="text-xs">${tx.terms}</p>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-obsidian border border-borderdark space-y-3">
+                        <div class="text-xs font-bold uppercase text-softgray">Delivery Progress Stage</div>
+                        <div class="flex justify-between text-xs font-semibold">
+                            <span id="stage-1">1. Preparing</span>
+                            <span id="stage-2">2. Ready</span>
+                            <span id="stage-3">3. Shipped</span>
+                            <span id="stage-4">4. Delivered</span>
+                        </div>
+                        ${!isBuyer && ['Payment Received', 'Shipped / Dispatched'].includes(tx.status) ? `
+                            <div class="pt-2 flex items-center space-x-2">
+                                <select id="updateStageSelect" class="flex-1 px-3 py-2 rounded-lg bg-zinc-800 text-xs text-offwhite border border-borderdark">
+                                    <option value="Preparing Order">Preparing Order</option>
+                                    <option value="Ready for Dispatch">Ready for Dispatch</option>
+                                    <option value="Shipped / Dispatched">Shipped / Dispatched</option>
+                                    <option value="Delivered">Delivered</option>
+                                </select>
+                                <button onclick="updateDeliveryStage('${tx.id}')" class="px-4 py-2 rounded-lg bg-acidlime text-obsidian font-bold text-xs">
+                                    Update Stage
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="text-xs font-bold uppercase text-softgray">Transaction Timeline</div>
+                        <div class="space-y-2 max-h-40 overflow-y-auto pr-2">
+                            ${tx.timeline.map(item => `
+                                <div class="text-xs flex items-start space-x-3 p-2 rounded-lg bg-obsidian border border-borderdark/60">
+                                    <span class="font-mono text-softgray text-[10px]">${item.time}</span>
+                                    <span class="text-offwhite flex-1">${item.event}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-borderdark flex flex-wrap gap-3 justify-end" id="modal-action-buttons">
+                        <!-- Dynamically injected action buttons -->
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modalEl);
+
+            // Render conditional action buttons safely without syntax errors
+            const actionContainer = document.getElementById('modal-action-buttons');
+            if (actionContainer) {
+                let buttonsHtml = '';
+                if (!isBuyer && tx.status === 'Proposed') {
+                    buttonsHtml += `
+                        <button onclick="rejectDeal('${tx.id}')" class="px-4 py-2.5 rounded-xl bg-red-500/10 text-red-400 font-bold text-xs hover:bg-red-500/20">Reject Proposal</button>
+                        <button onclick="acceptDeal('${tx.id}')" class="px-5 py-2.5 rounded-xl bg-acidlime text-obsidian font-bold text-xs hover:bg-lime-400">Accept Deal Proposal</button>
+                    `;
+                }
+                if (isBuyer && tx.status === 'Accepted') {
+                    buttonsHtml += `
+                        <button onclick="openPaymentScreen('${tx.id}')" class="px-6 py-3 rounded-xl bg-acidlime text-obsidian font-extrabold text-sm hover:bg-lime-400 shadow-lg shadow-acidlime/20">
+                            Proceed to Virtual Payment (${formatPKR(tx.amount)})
+                        </button>
+                    `;
+                }
+                if (isBuyer && (tx.status === 'Shipped / Dispatched' || tx.shippingStage === 'Delivered') && tx.status !== 'Completed') {
+                    buttonsHtml += `
+                        <button onclick="openDisputeForm('${tx.id}')" class="px-4 py-2.5 rounded-xl bg-red-500/10 text-red-400 font-bold text-xs hover:bg-red-500/20">Raise Dispute</button>
+                        <button onclick="confirmDelivery('${tx.id}')" class="px-5 py-2.5 rounded-xl bg-acidlime text-obsidian font-bold text-xs hover:bg-lime-400">Confirm Delivery & Release Funds</button>
+                    `;
+                }
+                buttonsHtml += `<button onclick="closeModal()" class="px-4 py-2.5 rounded-xl bg-zinc-800 text-xs font-semibold hover:bg-zinc-700">Close</button>`;
+                actionContainer.innerHTML = buttonsHtml;
+            }
+
+            lucide.createIcons();
+        }
+
+        // --- WORKFLOW ACTIONS ---
+        function acceptDeal(txId) {
+            const tx = state.transactions.find(t => t.id === txId);
+            if (!tx) return;
+            tx.status = 'Accepted';
+            tx.timeline.push({ time: new Date().toISOString().replace('T', ' ').substring(0, 16), event: `Deal proposal accepted by seller ${state.currentUser.name}. Awaiting buyer payment.` });
+            addNotification(`Deal ${txId} accepted by seller.`);
+            saveState();
+            closeModal();
+            render();
+            showToast("Deal proposal accepted successfully! Buyer can now make escrow payment.");
+        }
+
+        function rejectDeal(txId) {
+            const tx = state.transactions.find(t => t.id === txId);
+            if (!tx) return;
+            tx.status = 'Rejected';
+            tx.timeline.push({ time: new Date().toISOString().replace('T', ' ').substring(0, 16), event: `Deal proposal rejected by seller ${state.currentUser.name}.` });
+            addNotification(`Deal ${txId} rejected by seller.`);
+            saveState();
+            closeModal();
+            render();
+            showToast("Deal proposal rejected.", "error");
+        }
+
+        function openPaymentScreen(txId) {
+            const tx = state.transactions.find(t => t.id === txId);
+            if (!tx) return;
+            closeModal();
+
+            const modalEl = document.createElement('div');
+            modalEl.id = 'global-modal';
+            modalEl.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-obsidian/80 backdrop-blur-sm';
+            modalEl.innerHTML = `
+                <div class="w-full max-w-lg bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 shadow-2xl space-y-6">
+                    <div class="flex justify-between items-center border-b border-borderdark pb-4">
+                        <h3 class="text-lg font-bold">Simulated Secure Payment Gateway</h3>
+                        <button onclick="closeModal()" class="p-2 rounded-xl bg-zinc-800 text-softgray hover:text-offwhite"><i data-lucide="x" class="w-5 h-5"></i></button>
+                    </div>
+                    <div class="space-y-4 text-sm">
+                        <div class="p-4 rounded-xl bg-obsidian border border-borderdark space-y-1">
+                            <div class="text-xs text-softgray">Amount to Secure in Escrow</div>
+                            <div class="text-2xl font-extrabold text-acidlime">${formatPKR(tx.amount)}</div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-softgray mb-2">Select Payment Simulation Method</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="p-3 rounded-xl bg-obsidian border border-borderdark flex items-center space-x-3 cursor-pointer hover:border-acidlime">
+                                    <input type="radio" name="payMethod" value="Bank Transfer (Meezan Bank)" checked class="text-acidlime">
+                                    <span>Bank Transfer</span>
+                                </label>
+                                <label class="p-3 rounded-xl bg-obsidian border border-borderdark flex items-center space-x-3 cursor-pointer hover:border-acidlime">
+                                    <input type="radio" name="payMethod" value="JazzCash Wallet" class="text-acidlime">
+                                    <span>JazzCash</span>
+                                </label>
+                                <label class="p-3 rounded-xl bg-obsidian border border-borderdark flex items-center space-x-3 cursor-pointer hover:border-acidlime">
+                                    <input type="radio" name="payMethod" value="Easypaisa Wallet" class="text-acidlime">
+                                    <span>Easypaisa</span>
+                                </label>
+                                <label class="p-3 rounded-xl bg-obsidian border border-borderdark flex items-center space-x-3 cursor-pointer hover:border-acidlime">
+                                    <input type="radio" name="payMethod" value="BindPay Demo Balance" class="text-acidlime">
+                                    <span>BindPay Balance</span>
+                                </label>
+                            </div>
+                        </div>
+                        <button onclick="processPayment('${tx.id}')" class="w-full py-4 px-4 bg-acidlime text-obsidian font-extrabold rounded-xl hover:bg-lime-400 transition-colors shadow-lg shadow-acidlime/20 text-sm">
+                            PAY NOW (${formatPKR(tx.amount)})
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modalEl);
+            lucide.createIcons();
+        }
+
+        function processPayment(txId) {
+            const tx = state.transactions.find(t => t.id === txId);
+            if (!tx) return;
+            const method = document.querySelector('input[name="payMethod"]:checked').value;
+            const payRef = "PAY-PK-" + Math.floor(100000 + Math.random() * 900000);
+
+            tx.status = 'Payment Received';
+            tx.paymentMethod = method;
+            tx.paymentRef = payRef;
+            tx.timeline.push({
+                time: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                event: `Simulated payment of ${formatPKR(tx.amount)} via ${method} received (Ref: ${payRef}) and secured in escrow vault.`
+            });
+
+            addNotification(`Payment received for deal ${txId}. Funds secured in escrow.`);
+            saveState();
+            closeModal();
+            render();
+            showToast("Payment successfully processed and secured in escrow!");
+        }
+
+        function updateDeliveryStage(txId) {
+            const tx = state.transactions.find(t => t.id === txId);
+            if (!tx) return;
+            const stage = document.getElementById('updateStageSelect').value;
+            tx.shippingStage = stage;
+            if (stage === 'Delivered') {
+                tx.status = 'Shipped / Dispatched';
+            }
+            tx.timeline.push({
+                time: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                event: `Seller updated delivery progress to: ${stage}.`
+            });
+
+            addNotification(`Delivery progress updated for ${txId}: ${stage}`);
+            saveState();
+            closeModal();
+            render();
+            showToast(`Delivery stage updated to ${stage}!`);
+        }
+
+        function confirmDelivery(txId) {
+            const tx = state.transactions.find(t => t.id === txId);
+            if (!tx) return;
+            tx.status = 'Completed';
+            tx.shippingStage = 'Delivered';
+            tx.timeline.push({
+                time: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                event: `Delivery confirmed by buyer. Escrow funds released to seller available balance.`
+            });
+
+            addNotification(`Delivery confirmed for ${txId}. Funds released to seller.`);
+            saveState();
+            closeModal();
+            render();
+            showToast("Delivery confirmed successfully! Funds released to seller.");
+        }
+
+        function openDisputeForm(txId) {
+            closeModal();
+            const modalEl = document.createElement('div');
+            modalEl.id = 'global-modal';
+            modalEl.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-obsidian/80 backdrop-blur-sm';
+            modalEl.innerHTML = `
+                <div class="w-full max-w-lg bg-carddark dark:bg-carddark bg-white border border-borderdark dark:border-borderdark border-borderlight rounded-2xl p-6 shadow-2xl space-y-6">
+                    <div class="flex justify-between items-center border-b border-borderdark pb-4">
+                        <h3 class="text-lg font-bold">Raise Escrow Dispute</h3>
+                        <button onclick="closeModal()" class="p-2 rounded-xl bg-zinc-800 text-softgray hover:text-offwhite"><i data-lucide="x" class="w-5 h-5"></i></button>
+                    </div>
+                    <form onsubmit="submitDispute(event, '${txId}')" class="space-y-4 text-sm">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">Dispute Reason</label>
+                            <select id="disputeReason" class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite">
+                                <option value="Product Not Received">Product Not Received</option>
+                                <option value="Wrong Product Received">Wrong Product Received</option>
+                                <option value="Damaged Product">Damaged Product</option>
+                                <option value="Service Not Delivered">Service Not Delivered</option>
+                                <option value="Terms Not Followed">Terms Not Followed</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-softgray mb-1.5">Detailed Description</label>
+                            <textarea id="disputeDesc" rows="3" required placeholder="Describe the issue in detail..." class="w-full px-4 py-3 rounded-xl bg-obsidian border border-borderdark text-offwhite"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-3.5 px-4 bg-red-500 text-white font-bold rounded-xl hover:bg-red-600 shadow-lg">
+                            Submit Dispute & Freeze Funds
+                        </button>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modalEl);
+            lucide.createIcons();
+        }
+
+        function submitDispute(event, txId) {
+            event.preventDefault();
+            const tx = state.transactions.find(t => t.id === txId);
+            if (!tx) return;
+            const reason = document.getElementById('disputeReason').value;
+            const desc = document.getElementById('disputeDesc').value;
+            const dId = "DSP-" + Math.floor(1000 + Math.random() * 9000);
+
+            tx.status = 'Disputed';
+            tx.dispute = {
+                id: dId,
+                reason: reason,
+                description: desc,
+                notes: "Submitted via buyer portal.",
+                date: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                status: "Open"
+            };
+            tx.timeline.push({
+                time: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                event: `Dispute raised by buyer (${reason}). Escrow funds frozen.`
+            });
+
+            addNotification(`Dispute raised on transaction ${txId}. Escrow funds frozen.`);
+            saveState();
+            closeModal();
+            render();
+            showToast("Dispute successfully submitted. Escrow funds frozen for mediation.", "error");
+        }
+
+        window.onload = function() {
+            render();
+        };
+    </script>
+</body>
+</html>
